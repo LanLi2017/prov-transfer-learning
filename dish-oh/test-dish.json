@@ -1,0 +1,43 @@
+[
+    {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "name",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "Fresh Rhubarb",
+          "Fresh rhubarb",
+          "Rhubarb, fresh"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "Fresh Rhubarb"
+      },
+      {
+        "from": [
+          "Gombo de Volaille, Printaniere",
+          "Gombo de volaille, Printaniere"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "Gombo de Volaille, Printaniere"
+    },
+      {
+        "from": [
+            "Gombo de Volaille, Printaniere",
+          "Gombo de volaille, Printanière",
+          "Gombo de Volaille, de Printaniere"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "Gombo de volaille, Printanière"
+      }
+    ],
+    "description": "Mass edit cells in column name"
+  }
+]

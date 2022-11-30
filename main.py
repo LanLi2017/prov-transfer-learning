@@ -49,7 +49,8 @@ def save_metadata(json_files):
     df['Column Name'] = col_n_col
     df['Step ID'] = steps_col
     df.index.name = 'Index'
-    df.to_csv('workflow-analysis/metadata.csv')
+    # df.to_csv('workflow-analysis/metadata.csv')
+    df.to_csv('workflow-analysis/test_metadata.csv')
     # print(df)
     return df
 
@@ -62,52 +63,98 @@ def mass_edit_analysis(df):
     gb = rslt_df.groupby('JSON File Name')   
     df_groups = gb.groups
     jsonf_paths = list(df_groups.keys())
-    print(jsonf_paths)
     stepids_list = [list(v) for v in df_groups.values()]
-    pprint(stepids_list)
     
     sub_dfs = [gb.get_group(x) for x in gb.groups]
-    mass_edits_json = []
+    mass_edits_integrate = [] # output edits: [{"from":[], "to":[]},{...}...] as the knowledge base
     for i,sub_df in enumerate(sub_dfs):
         seen_from_values = []
         seen_to_values = []
         json_f = jsonf_paths[i]
-        json_data = json.load(json_f)
-        stepid_list = stepids_list[i]
-        for index, row in sub_df.iterrows():
-            step_id = row['Step ID']
-            mass_edits = json_data[step_id]['edits'][0]
-            from_nodes = mass_edits['from']
-            seen_from_values.append(from_nodes)
-            to_node = mass_edits['to']
-            seen_to_values.append(to_node)
-            if to_node in seen_from_values or from_nodes in seen_from_values:
-                # overwritten/conflicts within the same JSON file 
-                # 1.deal with cases when a->b->c...->n => a->n
-                # 2. similarly, when prev edits: a->b; cur edits: a->c => a->c
-                # only save a -> n [replace the internal products with the final versions]
-                idx = seen_to_values.index(to_node)
-                stepid = stepid_list[idx]
-                pass
-            else:
-                pass
-        # Deal with overwritten/conflicts across JSON file
+        mass_edits_sub = []
+        with open(json_f, 'rt')as file:
+            json_data = json.load(file)
+            for index, row in sub_df.iterrows():
+                step_id = row['Step ID']
+                mass_edits = json_data[step_id]['edits']
+                for single_edit in mass_edits:
+                    from_nodes = single_edit['from']
+                    seen_from_values.append(from_nodes)
+                    overlap_node = list(set(from_nodes) & set(seen_to_values))
+                    to_node = single_edit['to']
+                    if overlap_node:
+                        print(overlap_node)
+                        print(seen_to_values)
+                        # overwritten/conflicts within the same JSON file 
+                        # deal with cases when a->b->c...->n => a->n
+                        # only save a -> n [replace the internal products with the final versions]
+                        assert len(overlap_node) == 1
+                        overlap_node_v = overlap_node[0]
+                        idx = seen_to_values.index(overlap_node_v)
+                        mass_edits_sub[idx]['to'] = to_node
+                        from_nodes.remove(overlap_node_v)
+                        mass_edits_sub.append(
+                            {
+                                "from":from_nodes,
+                                "to": to_node
+                            }
+                        )
 
-            
-            
+                    else:
+                        mass_edits_sub.append(
+                            {
+                                "from":from_nodes,
+                                "to": to_node
+                            }
+                        )
+                    seen_to_values.append(to_node)
+        mass_edits_sub = dedup_mass_edits(mass_edits_sub)
+        mass_edits_integrate.append(mass_edits_sub)
+
+    return mass_edits_integrate    
+
+
+def dedup_mass_edits(mass_edits):
+    #TODO: "deduplicate"/integrate mass-edits if they share the same "to_values"
+    res_dicts = {}
+    for edits_value in mass_edits:
+        from_v = edits_value['from']
+        to = edits_value['to']
+        res_dicts.setdefault(to, []).extend(from_v)
+    merge_data = [
+        {
+        'from': from_,
+        'to': to,
+    }
+    for to, from_ in res_dicts.items()
+    ]
+    return merge_data
+
+
+def clean_mass_edits(mass_edits):
+    #TODO: resolve the conflicts of the mass edits across recipes
+    # Deal with overwritten/conflicts across JSON file
+    pass
+
+
+def viz_kb():
     #TODO NEO4j could be better db [draw the knowledge graph]
 
+    pass
+    
 
 def main():
-    json_files = [
+    json_files = ['dish-oh/test-dish.json']
+    # json_files = [
     # 'dish-oh/team3-OpenRefineHistory_Dish.json']
                 #   'dish-oh/team15-OpenRefineHistory_Dish.json',
-                  'dish-oh/team140-OpenRefineHistory_Dish.json',
-                  'dish-oh/team2020-OpenRefineHistory_Dish.json',
+                #   'dish-oh/team140-OpenRefineHistory_Dish.json',
+                #   'dish-oh/team2020-OpenRefineHistory_Dish.json',
                 #   'dish-oh/team2022-OpenRefineHistory_Dish.json'
-                ]
+                # ]
     df = save_metadata(json_files)
-    mass_edit_analysis(df)
+    recipe_kb = mass_edit_analysis(df)
+    pprint(recipe_kb)
 
 
 if __name__ == '__main__':
