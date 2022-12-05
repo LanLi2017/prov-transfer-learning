@@ -1,0 +1,87 @@
+CREATE TABLE IF NOT EXISTS "DishClean"(
+  "id" TEXT,
+  "name" TEXT,
+  "lowest_price" TEXT,
+  "highest_price" TEXT
+);
+CREATE TABLE IF NOT EXISTS "DishRaw"(
+  "id" TEXT,
+  "name" TEXT,
+  "description" TEXT,
+  "menus_appeared" TEXT,
+  "times_appeared" TEXT,
+  "first_appeared" TEXT,
+  "last_appeared" TEXT,
+  "lowest_price" TEXT,
+  "highest_price" TEXT
+);
+CREATE TABLE IF NOT EXISTS "MenuClean"(
+  "id" TEXT,
+  "sponsor" TEXT,
+  "if_NY" TEXT,
+  "place" TEXT,
+  "location" TEXT,
+  "dish_count" TEXT
+);
+CREATE TABLE IF NOT EXISTS "MenuRaw"(
+  "id" TEXT,
+  "name" TEXT,
+  "sponsor" TEXT,
+  "event" TEXT,
+  "venue" TEXT,
+  "place" TEXT,
+  "physical_description" TEXT,
+  "occasion" TEXT,
+  "notes" TEXT,
+  "call_number" TEXT,
+  "keywords" TEXT,
+  "language" TEXT,
+  "date" TEXT,
+  "location" TEXT,
+  "location_type" TEXT,
+  "currency" TEXT,
+  "currency_symbol" TEXT,
+  "status" TEXT,
+  "page_count" TEXT,
+  "dish_count" TEXT
+);
+CREATE TABLE IF NOT EXISTS "MenuItem"(
+  "id" TEXT,
+  "menu_page_id" TEXT,
+  "price" TEXT,
+  "high_price" TEXT,
+  "dish_id" TEXT,
+  "created_at" TEXT,
+  "updated_at" TEXT,
+  "xpos" TEXT,
+  "ypos" TEXT
+);
+CREATE TABLE IF NOT EXISTS "MenuPage"(
+  "id" TEXT,
+  "menu_id" TEXT,
+  "page_number" TEXT,
+  "image_id" TEXT,
+  "full_height" TEXT,
+  "full_width" TEXT,
+  "uuid" TEXT
+);
+CREATE TABLE IF NOT EXISTS "MenuAggRaw"(
+  "location" TEXT,
+  "place" TEXT,
+  "sponsor" TEXT,
+  "dish_name" TEXT,
+  "dish_lowest_price" TEXT,
+  "dish_highest_price" TEXT,
+  "mi_price" TEXT,
+  "mi_high_price" TEXT
+);
+CREATE TABLE IF NOT EXISTS "MenuAggClean"(
+  "location" TEXT,
+  "place" TEXT,
+  "sponsor" TEXT,
+  "dish_name" TEXT,
+  "dish_lowest_price" TEXT,
+  "dish_highest_price" TEXT,
+  "mi_price" TEXT,
+  "mi_high_price" TEXT
+);

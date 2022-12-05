@@ -1,0 +1,62 @@
+# @BEGIN overall_outer_workflow
+# @PARAM nypl_menus
+# @PARAM sqlite_db
+# @IN DishRaw  @URI file:DishRaw.csv
+# @IN MenuRaw  @URI file:MenuRaw.csv
+# @IN MenuPage  @URI file:MenuPage.csv
+# @IN MenuItem  @URI file:MenuItem.csv
+# @OUT DishClean  @URI file:DishClean.csv
+# @OUT MenuClean  @URI file:MenuClean.csv
+# @OUT MenuAggClean  @URI file:MenuAggClean.csv
+# @OUT MenuAggRaw  @URI file:MenuAggRaw.csv
+# @OUT SQLiteDb_joint  @URI file:NYPL_Menus.db
+# @BEGIN data_profiling
+# @PARAM nypl_menus
+# @IN DishRaw  @AS DishRaw  @URI file:DishRaw.csv
+# @IN MenuRaw  @AS MenuRaw  @URI file:MenuRaw.csv
+# @IN MenuPage  @AS MenuPage  @URI file:MenuPage.csv
+# @IN MenuItem  @AS MenuItem  @URI file:MenuItem.csv
+# @END data_profiling
+# @BEGIN openrefine_initial_cleaning
+# @PARAM nypl_menus
+# @IN DishRaw  @AS DishRaw  @URI file:DishRaw.csv
+# @IN MenuRaw  @AS MenuRaw  @URI file:MenuRaw.csv
+# @OUT DishClean  @AS DishClean  @URI file:DishClean.csv
+# @OUT MenuClean  @AS MenuClean  @URI file:MenuClean.csv
+# @END openrefine_initial_cleaning
+# @BEGIN data_loading
+# @PARAM sqlite_db
+# @IN DishRaw  @AS DishRaw  @URI file:DishRaw.csv
+# @IN MenuRaw  @AS MenuRaw  @URI file:MenuRaw.csv
+# @IN MenuPage  @AS MenuPage  @URI file:MenuPage.csv
+# @IN MenuItem  @AS MenuItem  @URI file:MenuItem.csv
+# @IN DishClean  @AS DishClean  @URI file:DishClean.csv
+# @IN MenuClean  @AS MenuClean  @URI file:MenuClean.csv
+# @OUT SQLiteDb  @AS SQLiteDb  @URI file:NYPL_Menus.db
+# @END data_loading
+# @BEGIN sql_joining_clean
+# @PARAM sqlite_db
+# @IN SQLiteDb  @AS SQLiteDb  @URI file:NYPL_Menus.db
+# @OUT MenuAggCleanInitial  @AS MenuAggCleanInitial  @URI file:MenuAggClean.csv
+# @END sql_joining_clean
+# @BEGIN openrefine_secondary_cleaning
+# @PARAM sqlite_db
+# @IN MenuAggCleanInitial  @AS MenuAggCleanInitial  @URI file:MenuAggClean.csv
+# @OUT MenuAggClean  @AS MenuAggClean  @URI file:MenuAggClean.csv
+# @END openrefine_secondary_cleaning
+# @BEGIN sql_joining_raw
+# @PARAM sqlite_db
+# @IN SQLiteDb  @AS SQLiteDb  @URI file:NYPL_Menus.db
+# @OUT MenuAggRaw  @AS MenuAggRaw  @URI file:MenuAggRaw.csv
+# @END sql_joining_raw
+# @BEGIN joint_data_loading
+# @PARAM sqlite_db
+# @IN SQLiteDb  @AS SQLiteDb  @URI file:NYPL_Menus.db
+# @IN MenuAggClean  @AS MenuAggClean  @URI file:MenuAggClean.csv
+# @IN MenuAggRaw  @AS MenuAggRaw  @URI file:MenuAggRaw.csv
+# @OUT SQLiteDb_joint  @AS SQLiteDb_joint  @URI file:NYPL_Menus.db
+# @END joint_data_loading
+# @BEGIN icv_checking
+# @IN SQLiteDb_joint  @AS SQLiteDb_joint  @URI file:NYPL_Menus.db
+# @END icv_checking
+# @END overall_outer_workflow

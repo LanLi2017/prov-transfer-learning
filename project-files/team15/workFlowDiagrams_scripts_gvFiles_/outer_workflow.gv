@@ -1,0 +1,101 @@
+digraph Workflow {
+rankdir=TB
+fontname=Courier; fontsize=18; labelloc=t
+label=overall_workflow
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+python_remove_unnecessary_fields
+openrefine_clean
+map_currency_exchange
+python_add_currency_nyc_chicken
+mysql_ic_check
+mysql_query_analyze
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+analysis_result
+input_menu [shape=record rankdir=LR label="{<f0> input_menu |<f1> file\:\{project_root\}/Menu.csv}"];
+input_menu_page [shape=record rankdir=LR label="{<f0> input_menu_page |<f1> file\:\{project_root\}/MenuPage.csv}"];
+input_menu_item [shape=record rankdir=LR label="{<f0> input_menu_item |<f1> file\:\{project_root\}/MenuItem.csv}"];
+input_dish [shape=record rankdir=LR label="{<f0> input_dish |<f1> file\:\{project_root\}/Dish.csv}"];
+only_necessary_field_menu [shape=record rankdir=LR label="{<f0> only_necessary_field_menu |<f1> file\:\{project_root\}/NYPL_only_necessary_columns/Menu.csv}"];
+only_necessary_field_menu_page [shape=record rankdir=LR label="{<f0> only_necessary_field_menu_page |<f1> file\:\{project_root\}/NYPL_only_necessary_columns/MenuPage.csv}"];
+only_necessary_field_menu_item [shape=record rankdir=LR label="{<f0> only_necessary_field_menu_item |<f1> file\:\{project_root\}/NYPL_only_necessary_columns/MenuItem.csv}"];
+only_necessary_field_dish [shape=record rankdir=LR label="{<f0> only_necessary_field_dish |<f1> file\:\{project_root\}/NYPL_only_necessary_columns/Dish.csv}"];
+currency_types [shape=record rankdir=LR label="{<f0> currency_types |<f1> file\:\{project_root\}/currency_types.txt}"];
+exchange_rate [shape=record rankdir=LR label="{<f0> exchange_rate |<f1> file\:\{project_root\}/currency_convert_plan.xlsx}"];
+cleaned_menu [shape=record rankdir=LR label="{<f0> cleaned_menu |<f1> file\:\{project_root\}/After_OpenRefine/Menu.csv}"];
+cleaned_dish [shape=record rankdir=LR label="{<f0> cleaned_dish |<f1> file\:\{project_root\}/After_OpenRefine/Dish.csv}"];
+chicken_dish_list [shape=record rankdir=LR label="{<f0> chicken_dish_list |<f1> file\:\{project_root\}/chicken_dishes.txt}"];
+currency_exchange_rate
+added_isnyc_currency_fields_menu [shape=record rankdir=LR label="{<f0> added_isnyc_currency_fields_menu |<f1> file\:\{project_root\}/afterAddingCurrAndNyc/Menu.csv}"];
+added_ischicken_field_dish [shape=record rankdir=LR label="{<f0> added_ischicken_field_dish |<f1> file\:\{project_root\}/afterAddingCurrAndNyc/Dish.csv}"];
+cleaned_menu_page [shape=record rankdir=LR label="{<f0> cleaned_menu_page |<f1> file\:\{project_root\}/After_OpenRefine/MenuPage.csv}"];
+cleaned_menu_item [shape=record rankdir=LR label="{<f0> cleaned_menu_item |<f1> file\:\{project_root\}/After_OpenRefine/MenuItem.csv}"];
+result_menu
+result_menu_page
+result_menu_item
+result_dish
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+python_remove_unnecessary_fields -> only_necessary_field_menu
+python_remove_unnecessary_fields -> only_necessary_field_menu_page
+python_remove_unnecessary_fields -> only_necessary_field_menu_item
+python_remove_unnecessary_fields -> only_necessary_field_dish
+input_menu -> python_remove_unnecessary_fields
+input_menu_page -> python_remove_unnecessary_fields
+input_menu_item -> python_remove_unnecessary_fields
+input_dish -> python_remove_unnecessary_fields
+openrefine_clean -> cleaned_menu
+openrefine_clean -> cleaned_menu_page
+openrefine_clean -> cleaned_menu_item
+openrefine_clean -> cleaned_dish
+openrefine_clean -> currency_types
+only_necessary_field_menu -> openrefine_clean
+only_necessary_field_menu_page -> openrefine_clean
+only_necessary_field_menu_item -> openrefine_clean
+only_necessary_field_dish -> openrefine_clean
+map_currency_exchange -> currency_exchange_rate
+currency_types -> map_currency_exchange
+exchange_rate -> map_currency_exchange
+python_add_currency_nyc_chicken -> added_isnyc_currency_fields_menu
+python_add_currency_nyc_chicken -> added_ischicken_field_dish
+cleaned_menu -> python_add_currency_nyc_chicken
+cleaned_dish -> python_add_currency_nyc_chicken
+chicken_dish_list -> python_add_currency_nyc_chicken
+currency_exchange_rate -> python_add_currency_nyc_chicken
+mysql_ic_check -> result_menu
+mysql_ic_check -> result_menu_page
+mysql_ic_check -> result_menu_item
+mysql_ic_check -> result_dish
+added_isnyc_currency_fields_menu -> mysql_ic_check
+added_ischicken_field_dish -> mysql_ic_check
+cleaned_menu_page -> mysql_ic_check
+cleaned_menu_item -> mysql_ic_check
+mysql_query_analyze -> analysis_result
+result_menu -> mysql_query_analyze
+result_menu_page -> mysql_query_analyze
+result_menu_item -> mysql_query_analyze
+result_dish -> mysql_query_analyze
+}}
+subgraph cluster_input_ports_group_outer { label=""; color=white
+subgraph cluster_input_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+input_menu_input_port [label=""]
+input_menu_page_input_port [label=""]
+input_menu_item_input_port [label=""]
+input_dish_input_port [label=""]
+exchange_rate_input_port [label=""]
+chicken_dish_list_input_port [label=""]
+}}
+subgraph cluster_output_ports_group_outer { label=""; color=white
+subgraph cluster_output_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+analysis_result_output_port [label=""]
+}}
+input_menu_input_port -> input_menu
+input_menu_page_input_port -> input_menu_page
+input_menu_item_input_port -> input_menu_item
+input_dish_input_port -> input_dish
+exchange_rate_input_port -> exchange_rate
+chicken_dish_list_input_port -> chicken_dish_list
+analysis_result -> analysis_result_output_port
+}

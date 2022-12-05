@@ -1,0 +1,51 @@
+
+/* Start of top-level graph */
+digraph Workflow {
+rankdir=TB
+
+/* Title for graph */
+fontname=Courier; fontsize=18; labelloc=t
+label=NYPLMenuDataset
+
+/* Start of double cluster for drawing box around nodes in workflow */
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+
+/* Style for nodes representing atomic programs in workflow */
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+
+/* Nodes representing atomic programs in workflow */
+OpenRefine_Loading [shape=record rankdir=LR label="{<f0> OpenRefine_Loading |<f1> Load Files in OpenRefine}"];
+analyze_data [shape=record rankdir=LR label="{<f0> analyze_data |<f1> Analyze data using OpenRefine using Text Facets and Filters}"];
+clean_data [shape=record rankdir=LR label="{<f0> clean_data |<f1> Clean data using OpenRefine using Clusters, GREL}"];
+ICV_Queries [shape=record rankdir=LR label="{<f0> ICV_Queries |<f1> Run ICV Queries in SQLite to verify data and test case U1.}"];
+
+/* Style for nodes representing non-parameter data channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes for non-parameter data channels in workflow */
+menu_file
+dish_file
+menuitem_file
+menupage_file
+
+/* Style for nodes representing parameter channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing parameter channels in workflow */
+
+/* Edges representing connections between programs and channels */
+OpenRefine_Loading -> analyze_data
+menu_file -> OpenRefine_Loading
+dish_file -> OpenRefine_Loading
+menuitem_file -> OpenRefine_Loading
+menupage_file -> OpenRefine_Loading
+analyze_data -> clean_data
+ICV_Queries -> cleaned_data
+clean_data -> ICV_Queries
+
+/* End of double cluster for drawing box around nodes in workflow */
+}}
+
+/* End of top-level graph */
+}

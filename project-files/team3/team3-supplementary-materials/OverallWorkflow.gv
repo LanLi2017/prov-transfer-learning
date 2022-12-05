@@ -1,0 +1,95 @@
+digraph Workflow {
+rankdir=TB
+fontname=Courier; fontsize=18; labelloc=t
+label=overall_outer_workflow
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+data_profiling
+openrefine_initial_cleaning
+data_loading
+sql_joining_clean
+openrefine_secondary_cleaning
+sql_joining_raw
+joint_data_loading
+icv_checking
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+DishClean [shape=record rankdir=LR label="{<f0> DishClean |<f1> file\:DishClean.csv}"];
+MenuClean [shape=record rankdir=LR label="{<f0> MenuClean |<f1> file\:MenuClean.csv}"];
+MenuAggClean [shape=record rankdir=LR label="{<f0> MenuAggClean |<f1> file\:MenuAggClean.csv}"];
+MenuAggRaw [shape=record rankdir=LR label="{<f0> MenuAggRaw |<f1> file\:MenuAggRaw.csv}"];
+SQLiteDb_joint [shape=record rankdir=LR label="{<f0> SQLiteDb_joint |<f1> file\:NYPL_Menus.db}"];
+DishRaw [shape=record rankdir=LR label="{<f0> DishRaw |<f1> file\:DishRaw.csv}"];
+MenuRaw [shape=record rankdir=LR label="{<f0> MenuRaw |<f1> file\:MenuRaw.csv}"];
+MenuPage [shape=record rankdir=LR label="{<f0> MenuPage |<f1> file\:MenuPage.csv}"];
+MenuItem [shape=record rankdir=LR label="{<f0> MenuItem |<f1> file\:MenuItem.csv}"];
+SQLiteDb [shape=record rankdir=LR label="{<f0> SQLiteDb |<f1> file\:NYPL_Menus.db}"];
+MenuAggCleanInitial [shape=record rankdir=LR label="{<f0> MenuAggCleanInitial |<f1> file\:MenuAggClean.csv}"];
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+nypl_menus
+sqlite_db
+nypl_menus -> data_profiling
+DishRaw -> data_profiling
+MenuRaw -> data_profiling
+MenuPage -> data_profiling
+MenuItem -> data_profiling
+openrefine_initial_cleaning -> DishClean
+openrefine_initial_cleaning -> MenuClean
+nypl_menus -> openrefine_initial_cleaning
+DishRaw -> openrefine_initial_cleaning
+MenuRaw -> openrefine_initial_cleaning
+data_loading -> SQLiteDb
+sqlite_db -> data_loading
+DishRaw -> data_loading
+MenuRaw -> data_loading
+MenuPage -> data_loading
+MenuItem -> data_loading
+DishClean -> data_loading
+MenuClean -> data_loading
+sql_joining_clean -> MenuAggCleanInitial
+sqlite_db -> sql_joining_clean
+SQLiteDb -> sql_joining_clean
+openrefine_secondary_cleaning -> MenuAggClean
+sqlite_db -> openrefine_secondary_cleaning
+MenuAggCleanInitial -> openrefine_secondary_cleaning
+sql_joining_raw -> MenuAggRaw
+sqlite_db -> sql_joining_raw
+SQLiteDb -> sql_joining_raw
+joint_data_loading -> SQLiteDb_joint
+sqlite_db -> joint_data_loading
+SQLiteDb -> joint_data_loading
+MenuAggClean -> joint_data_loading
+MenuAggRaw -> joint_data_loading
+SQLiteDb_joint -> icv_checking
+}}
+subgraph cluster_input_ports_group_outer { label=""; color=white
+subgraph cluster_input_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+nypl_menus_input_port [label=""]
+sqlite_db_input_port [label=""]
+DishRaw_input_port [label=""]
+MenuRaw_input_port [label=""]
+MenuPage_input_port [label=""]
+MenuItem_input_port [label=""]
+}}
+subgraph cluster_output_ports_group_outer { label=""; color=white
+subgraph cluster_output_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+DishClean_output_port [label=""]
+MenuClean_output_port [label=""]
+MenuAggClean_output_port [label=""]
+MenuAggRaw_output_port [label=""]
+SQLiteDb_joint_output_port [label=""]
+}}
+nypl_menus_input_port -> nypl_menus
+sqlite_db_input_port -> sqlite_db
+DishRaw_input_port -> DishRaw
+MenuRaw_input_port -> MenuRaw
+MenuPage_input_port -> MenuPage
+MenuItem_input_port -> MenuItem
+DishClean -> DishClean_output_port
+MenuClean -> MenuClean_output_port
+MenuAggClean -> MenuAggClean_output_port
+MenuAggRaw -> MenuAggRaw_output_port
+SQLiteDb_joint -> SQLiteDb_joint_output_port
+}

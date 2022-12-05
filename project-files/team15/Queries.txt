@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+-- check chicken menu percentage & average price in 1887-1896
+------------------------------------------------------------------
+SELECT is_chicken, count(1) count, AVG(dollar_rate*price) as avg_price 
+FROM nyc_chicken 
+WHERE menu_date >= '1887-01-01' and menu_date < '1897-01-01' 
+GROUP BY is_chicken;
+-- is_chicken Y: 328 (2.73%), $0.826
+-- is_chicken N: 11,993, $0.713
+
+------------------------------------------------------------------
+-- check chicken menu percentage & average price in 1897-1906
+------------------------------------------------------------------
+SELECT is_chicken, count(1) count, AVG(dollar_rate*price) as avg_price 
+FROM nyc_chicken
+WHERE menu_date >= '1897-01-01' and menu_date < '1907-01-01' 
+GROUP BY is_chicken;
+-- is_chicken Y: 4310 (3.63%), $1.084
+-- is_chicken N: 118,497, $0.597
+
+------------------------------------------------------------------
+-- 6.1.1 menu_page::menu_id Foreign Key Check
+------------------------------------------------------------------
+select
+  mp.id menu_page_id,
+  m.id menu_id1,
+  mp.menu_id menu_id2    
+from
+  menu m
+  right join menu_page mp on (m.id = mp.menu_id)
+where m.id is null;
+-- 5799 rows returned
+
+------------------------------------------------------------------
+-- 6.1.3 menu_item::dish_id Foreign Key Check
+------------------------------------------------------------------
+select
+  mi.id menu_item_id,
+  mi.dish_id dish_id1,
+  d.id dish_id2   
+from
+  menu_item mi
+  left join dish d on (mi.dish_id = d.id)
+where d.id is null;
+-- 3 rows returned
+
+select
+  mi.id menu_item_id,
+  mi.dish_id dish_id1,
+  d.id dish_id2   
+from
+  menu_item mi
+  right join dish d on (mi.dish_id = d.id)
+where mi.dish_id is null;
+-- 12752 rows returned

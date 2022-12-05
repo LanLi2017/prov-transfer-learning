@@ -1,0 +1,149 @@
+#@begin Parallel_OR #@desc Parallel OpenRefine Workflow
+#@param expression:grel:if_(value_<_0,_0,_value)
+#@param expression:value.toNumber()
+#@param expression:value.replace(/\\s+/,'_')
+#@param expression:grel:value.replace(/;|\\[|\\]|!|"|\\\\/,_"")
+#@param expression:value.trim()
+#@param expression:value
+#@in times_appeared
+#@in name
+#@in name_2
+#@in times_appeared_1
+#@in name_11
+#@in name_1
+#@in name_5
+#@in name_6
+#@in name_12
+#@in name_7
+#@in name_13
+#@in name_15
+#@in lowest_price
+#@in menus_appeared
+#@in name_10
+#@in name_8
+#@in name_9
+#@in highest_price
+#@in name_3
+#@in name_16
+#@in name_4
+#@in name_14
+#@out CleanData
+#@begin core/text-transform0 #@desc Text transform on cells in column name using expression value.trim()
+#@param expression:value.trim()
+#@in name
+#@out name_1
+#@end core/text-transform0
+#@begin core/text-transform1 #@desc Text transform on cells in column name using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in name_1
+#@out name_2
+#@end core/text-transform1
+#@begin core/text-transform2 #@desc Text transform on cells in column name using expression grel:value.replace(/;|\\[|\\]|!|\"|\\\\/, \"\")
+#@param expression:grel:value.replace(/;|\\[|\\]|!|"|\\\\/,_"")
+#@in name_2
+#@out name_3
+#@end core/text-transform2
+#@begin core/text-transform3 #@desc Text transform on cells in column name using expression value.trim()
+#@param expression:value.trim()
+#@in name_3
+#@out name_4
+#@end core/text-transform3
+#@begin core/text-transform4 #@desc Text transform on cells in column name using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in name_4
+#@out name_5
+#@end core/text-transform4
+#@begin core/mass-edit5 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_5
+#@out name_6
+#@end core/mass-edit5
+#@begin core/mass-edit6 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_6
+#@out name_7
+#@end core/mass-edit6
+#@begin core/mass-edit7 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_7
+#@out name_8
+#@end core/mass-edit7
+#@begin core/mass-edit8 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_8
+#@out name_9
+#@end core/mass-edit8
+#@begin core/mass-edit9 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_9
+#@out name_10
+#@end core/mass-edit9
+#@begin core/mass-edit10 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_10
+#@out name_11
+#@end core/mass-edit10
+#@begin core/mass-edit11 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_11
+#@out name_12
+#@end core/mass-edit11
+#@begin core/mass-edit12 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_12
+#@out name_13
+#@end core/mass-edit12
+#@begin core/mass-edit13 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_13
+#@out name_14
+#@end core/mass-edit13
+#@begin core/mass-edit14 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_14
+#@out name_15
+#@end core/mass-edit14
+#@begin core/mass-edit15 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_15
+#@out name_16
+#@end core/mass-edit15
+#@begin core/mass-edit16 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_16
+#@out name_17
+#@end core/mass-edit16
+#@begin core/text-transform17 #@desc Text transform on cells in column menus_appeared using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in menus_appeared
+#@out menus_appeared_1
+#@end core/text-transform17
+#@begin core/text-transform18 #@desc Text transform on cells in column times_appeared using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in times_appeared
+#@out times_appeared_1
+#@end core/text-transform18
+#@begin core/text-transform19 #@desc Text transform on cells in column times_appeared using expression grel:if (value < 0, 0, value)
+#@param expression:grel:if_(value_<_0,_0,_value)
+#@in times_appeared_1
+#@out times_appeared_2
+#@end core/text-transform19
+#@begin core/text-transform20 #@desc Text transform on cells in column lowest_price using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in lowest_price
+#@out lowest_price_1
+#@end core/text-transform20
+#@begin core/text-transform21 #@desc Text transform on cells in column highest_price using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in highest_price
+#@out highest_price_1
+#@end core/text-transform21
+#@begin CombineDataCleaningChanges
+#@in name_17
+#@in menus_appeared_1
+#@in times_appeared_2
+#@in lowest_price_1
+#@in highest_price_1
+#@out CleanData
+#@end CombineDataCleaningChanges
+#@end Parallel_OR

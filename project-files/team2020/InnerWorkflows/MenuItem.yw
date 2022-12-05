@@ -1,0 +1,78 @@
+#@begin Parallel_OR #@desc Parallel OpenRefine Workflow
+#@param expression:grel:value.toDate('y-M-d_H:m:s')
+#@param expression:value.toNumber()
+#@param expression:value.toDate()
+#@in dish_id
+#@in menu_page_id
+#@in ypos
+#@in price
+#@in created_at
+#@in updated_at
+#@in created_at_1
+#@in xpos
+#@in high_price
+#@in id
+#@out CleanData
+#@begin core/text-transform0 #@desc Text transform on cells in column created_at using expression value.toDate()
+#@param expression:value.toDate()
+#@in created_at
+#@out created_at_1
+#@end core/text-transform0
+#@begin core/text-transform1 #@desc Text transform on cells in column created_at using expression grel:value.toDate('y-M-d H:m:s')
+#@param expression:grel:value.toDate('y-M-d_H:m:s')
+#@in created_at_1
+#@out created_at_2
+#@end core/text-transform1
+#@begin core/text-transform2 #@desc Text transform on cells in column updated_at using expression grel:value.toDate('y-M-d H:m:s')
+#@param expression:grel:value.toDate('y-M-d_H:m:s')
+#@in updated_at
+#@out updated_at_1
+#@end core/text-transform2
+#@begin core/text-transform3 #@desc Text transform on cells in column xpos using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in xpos
+#@out xpos_1
+#@end core/text-transform3
+#@begin core/text-transform4 #@desc Text transform on cells in column ypos using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in ypos
+#@out ypos_1
+#@end core/text-transform4
+#@begin core/text-transform5 #@desc Text transform on cells in column dish_id using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in dish_id
+#@out dish_id_1
+#@end core/text-transform5
+#@begin core/text-transform6 #@desc Text transform on cells in column high_price using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in high_price
+#@out high_price_1
+#@end core/text-transform6
+#@begin core/text-transform7 #@desc Text transform on cells in column price using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in price
+#@out price_1
+#@end core/text-transform7
+#@begin core/text-transform8 #@desc Text transform on cells in column menu_page_id using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in menu_page_id
+#@out menu_page_id_1
+#@end core/text-transform8
+#@begin core/text-transform9 #@desc Text transform on cells in column id using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in id
+#@out id_1
+#@end core/text-transform9
+#@begin CombineDataCleaningChanges
+#@in created_at_2
+#@in updated_at_1
+#@in xpos_1
+#@in ypos_1
+#@in dish_id_1
+#@in high_price_1
+#@in price_1
+#@in menu_page_id_1
+#@in id_1
+#@out CleanData
+#@end CombineDataCleaningChanges
+#@end Parallel_OR

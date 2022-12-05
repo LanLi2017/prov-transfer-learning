@@ -1,0 +1,113 @@
+DROP TABLE `cs513`.`menu`;
+CREATE TABLE `cs513`.`menu` (
+  `id` INT NOT NULL,
+  `place` VARCHAR(200) NULL,
+  `date` DATETIME NULL,
+  `location` VARCHAR(200) NULL,
+  `currency` VARCHAR(30) NULL,
+  `currency_symbol` VARCHAR(4) NULL,
+  `status` VARCHAR(12) NOT NULL,
+  `is_in_nyc` VARCHAR(10) NOT NULL,
+  `to_dollar_rate` DOUBLE NOT NULL,
+  PRIMARY KEY (`id`));
+
+LOAD DATA INFILE '/var/lib/mysql-files/Menu.csv'
+INTO TABLE menu
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(id, @place, @date, @location, @currency, @currency_symbol, status, is_in_nyc, to_dollar_rate)
+SET 
+	place = IF(@place = '', NULL, @place),
+    date = IF(@date = '', NULL, @date),
+	location = IF(@location = '', NULL, @location),
+	currency = IF(@currency = '', NULL, @currency),
+	currency_symbol = IF(@currency_symbol = '', NULL, @currency_symbol)
+;
+
+-------------------------------------------------
+-- Menu Page
+-------------------------------------------------
+DROP TABLE `cs513`.`menu_page`;
+CREATE TABLE `cs513`.`menu_page` (
+  `id` INT NOT NULL,
+  `menu_id` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+LOAD DATA INFILE '/var/lib/mysql-files/MenuPage.csv'
+INTO TABLE menu_page
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+;
+
+ALTER TABLE `cs513`.`menu_page` ADD INDEX `IDX_MENU_PAGE1` (`menu_id` ASC) VISIBLE;
+
+
+-------------------------------------------------
+-- Menu Item
+-------------------------------------------------
+DROP TABLE `cs513`.`menu_item`;
+CREATE TABLE `cs513`.`menu_item` (
+  `id` INT NOT NULL,
+  `menu_page_id` INT NOT NULL,
+  `price` INT NULL,
+  `dish_id` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+LOAD DATA INFILE '/var/lib/mysql-files/MenuItem.csv'
+INTO TABLE menu_item
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(id, menu_page_id, @price, dish_id)
+SET 
+	price = IF(@price = '', NULL, @price)
+;
+
+ALTER TABLE `cs513`.`menu_item` ADD INDEX `IDX_MENU_ITEM1` (`menu_page_id` ASC) VISIBLE;
+ALTER TABLE `cs513`.`menu_item` ADD INDEX `IDX_MENU_ITEM2` (`dish_id` ASC) VISIBLE;
+
+
+-------------------------------------------------
+-- Dish
+-------------------------------------------------
+DROP TABLE `cs513`.`dish`;
+CREATE TABLE `cs513`.`dish` (
+  `id` INT NOT NULL,
+  `name` TEXT NULL,
+  `is_chicken` CHAR(1) NOT NULL,
+  PRIMARY KEY (`id`));
+
+LOAD DATA INFILE '/var/lib/mysql-files/Dish.csv'
+INTO TABLE dish
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+;
+
+-------------------------------------------------
+-- Merged View
+-------------------------------------------------
+CREATE VIEW `nyc_chicken` AS
+SELECT 
+	M.date as menu_date,
+	D.name as dish_name,
+	MI.price,
+	M.to_dollar_rate as dollar_rate,    
+	M.is_in_nyc as is_nyc,
+	D.is_chicken as is_chicken
+FROM 
+	menu AS M 
+	INNER JOIN menu_page AS MP ON M.id = MP.menu_id
+	INNER JOIN menu_item AS MI ON MP.id = MI.menu_page_id
+	INNER JOIN dish AS D ON MI.dish_id = D.id
+WHERE 
+	M.status='complete' 
+	AND M.date IS NOT NULL;
+
+

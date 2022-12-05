@@ -1,0 +1,139 @@
+Let's see when a dish was appeared on which menu, sponsor, event, place (limiting to 10 counts)
+​
+%%sql
+​
+select dish.name, menu.sponsor, menu.event, menu.place, dish.first_appeared, menu.date
+from menu inner join menupage on menu.id = menupage.menu_id
+inner join menuitem on menupage.id = menuitem.menu_page_id
+inner join dish on menuitem.dish_id = dish.id
+where dish.name = 'Fried Eggs'
+limit 10
+​
+=========================================================================================
+
+Let's see when a dish was first appered on which menu, sponser, event, place
+%%sql
+​
+select dish.name, menu.sponsor, menu.event, menu.place, menu.date, dish.first_appeared
+from menu inner join menupage on menu.id = menupage.menu_id
+inner join menuitem on menupage.id = menuitem.menu_page_id
+inner join dish on menuitem.dish_id = dish.id
+where dish.name = 'French Fries'
+and menu.date is not ''
+order by menu.date
+limit 1
+
+=========================================================================================
+
+
+Let's see when a dish was last appered on which menu, sponser, event, place
+%%sql
+​
+select dish.name, menu.sponsor, menu.event, menu.place, menu.date, dish.last_appeared
+from menu inner join menupage on menu.id = menupage.menu_id
+inner join menuitem on menupage.id = menuitem.menu_page_id
+inner join dish on menuitem.dish_id = dish.id
+where dish.name = 'Fried Eggs'
+and menu.date is not ''
+order by menu.date desc
+limit 1
+
+=========================================================================================
+
+
+Check for uniqueness of id fields
+Menu Table
+
+%%sql
+​
+select *
+from menu
+where id in (select id as c 
+from menu 
+group by id
+having count(id) > 1 )
+
+Dish Table
+%%sql
+​
+select *
+from dish
+where id in (select id as c 
+from dish 
+group by id
+having count(id) > 1 )
+
+Menupage Table
+%%sql
+​
+select *
+from menupage
+where id in (select id as c 
+from menupage 
+group by id
+having count(id) > 1 )
+
+Menu Item Table
+%%sql
+​
+select *
+from menuitem
+where id in (select id as c 
+from menuitem 
+group by id
+having count(id) > 1 )
+
+=========================================================================================
+
+
+Each Menu item should have a single menu page id
+%%sql
+​
+​
+select id, menu_page_id
+from menuitem
+where menu_page_id in (select id as c 
+from menuitem 
+group by id
+having count(menu_page_id) > 1 )
+
+=========================================================================================
+
+
+Dish Count less than menu page count
+
+Ideally, dish count should be more than menu page count. But there are some instances where this is not correct. This could be due to other details and pictures in the menu
+
+%%sql
+​
+select count(*)
+from menu
+where cast(page_count as integer) > cast(dish_count as integer)
+
+
+=========================================================================================
+
+
+Top 5 dishes with most appearances
+%%sql
+​
+select name, count(name) 
+from dish 
+group by name 
+order by count(name) desc
+limit 5
+
+=========================================================================================
+
+
+Top 5 dishes appearing on most number of menus
+%%sql
+​
+select id, name, menus_appeared 
+from dish 
+order by menus_appeared desc
+limit 5
+
+
+
+

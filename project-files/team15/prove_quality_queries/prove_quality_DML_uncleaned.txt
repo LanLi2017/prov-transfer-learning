@@ -1,0 +1,51 @@
+SELECT count(1) 
+FROM nyc_chicken 
+WHERE currency IS NULL OR currency='dollars';
+-- count(1): 1154256
+-- count(1) (without where clause): 1222997
+
+SELECT count(1) 
+FROM nyc_chicken 
+WHERE place REGEXP '.*(\\bny\\b|\\bnyc\\b|\\bnew york\\b).*' 
+OR location REGEXP '.*(\\bny\\b|\\bnyc\\b|\\bnew york\\b).*';
+-- count(1): 161826
+
+SELECT count(1) 
+FROM nyc_chicken 
+WHERE place REGEXP 'new york' 
+OR location REGEXP 'new york';
+-- count(1): 112822
+
+SELECT count(1)
+FROM nyc_chicken
+WHERE dish_name REGEXP 'chicken';
+-- count(1):38362
+
+------------------------------------------------------------------
+-- check chicken menu percentage & average price in 1887-1896
+------------------------------------------------------------------
+SELECT count(1), AVG(price)
+FROM nyc_chicken 
+WHERE (currency='dollars' OR currency IS NULL) 
+AND (menu_date >= '1887-01-01' and menu_date < '1897-01-01') 
+AND (dish_name REGEXP 'chicken')
+AND (place REGEXP '.*(\\bny\\b|\\bnyc\\b|\\bnew york\\b).*' 
+OR location REGEXP '.*(\\bny\\b|\\bnyc\\b|\\bnew york\\b).*');
+-- is_chicken Y: 229 (1.99%), $0.8156
+-- is_chicken N: 11,472, $0.6755
+
+
+------------------------------------------------------------------
+-- check chicken menu percentage & average price in 1897-1906
+------------------------------------------------------------------
+SELECT count(1), AVG(price)
+FROM nyc_chicken 
+WHERE (currency='dollars' OR currency IS NULL) 
+AND (menu_date >= '1897-01-01' and menu_date < '1907-01-01')
+AND (dish_name REGEXP 'chicken')
+AND (place REGEXP '.*(\\bny\\b|\\bnyc\\b|\\bnew york\\b).*' 
+OR location REGEXP '.*(\\bny\\b|\\bnyc\\b|\\bnew york\\b).*');
+-- is_chicken Y: 3688 (3.06%), $1.0549
+-- is_chicken N: 120,179, $0.5981
+
+

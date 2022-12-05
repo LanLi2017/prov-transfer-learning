@@ -1,0 +1,57 @@
+digraph Workflow {
+rankdir=TB
+fontname=Courier; fontsize=18; labelloc=t
+label=python_remove_unnecessary_fields
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+check_null_columns
+remove_unnecessary_fields
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+only_necessary_field_menu
+only_necessary_field_menu_page
+only_necessary_field_menu_item
+only_necessary_field_dish
+input_menu [shape=record rankdir=LR label="{<f0> input_menu |<f1> file\:\{project_root\}/Menu.csv}"];
+input_menu_page [shape=record rankdir=LR label="{<f0> input_menu_page |<f1> file\:\{project_root\}/MenuPage.csv}"];
+input_menu_item [shape=record rankdir=LR label="{<f0> input_menu_item |<f1> file\:\{project_root\}/MenuItem.csv}"];
+input_dish [shape=record rankdir=LR label="{<f0> input_dish |<f1> file\:\{project_root\}/Dish.csv}"];
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+input_menu -> check_null_columns
+input_menu_page -> check_null_columns
+input_menu_item -> check_null_columns
+input_dish -> check_null_columns
+remove_unnecessary_fields -> only_necessary_field_menu
+remove_unnecessary_fields -> only_necessary_field_menu_page
+remove_unnecessary_fields -> only_necessary_field_menu_item
+remove_unnecessary_fields -> only_necessary_field_dish
+input_menu -> remove_unnecessary_fields
+input_menu_page -> remove_unnecessary_fields
+input_menu_item -> remove_unnecessary_fields
+input_dish -> remove_unnecessary_fields
+}}
+subgraph cluster_input_ports_group_outer { label=""; color=white
+subgraph cluster_input_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+input_menu_input_port [label=""]
+input_menu_page_input_port [label=""]
+input_menu_item_input_port [label=""]
+input_dish_input_port [label=""]
+}}
+subgraph cluster_output_ports_group_outer { label=""; color=white
+subgraph cluster_output_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+only_necessary_field_menu_output_port [label=""]
+only_necessary_field_menu_page_output_port [label=""]
+only_necessary_field_menu_item_output_port [label=""]
+only_necessary_field_dish_output_port [label=""]
+}}
+input_menu_input_port -> input_menu
+input_menu_page_input_port -> input_menu_page
+input_menu_item_input_port -> input_menu_item
+input_dish_input_port -> input_dish
+only_necessary_field_menu -> only_necessary_field_menu_output_port
+only_necessary_field_menu_page -> only_necessary_field_menu_page_output_port
+only_necessary_field_menu_item -> only_necessary_field_menu_item_output_port
+only_necessary_field_dish -> only_necessary_field_dish_output_port
+}

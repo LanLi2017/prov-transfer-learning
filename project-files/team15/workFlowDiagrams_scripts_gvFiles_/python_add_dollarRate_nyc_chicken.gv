@@ -1,0 +1,49 @@
+digraph Workflow {
+rankdir=TB
+fontname=Courier; fontsize=18; labelloc=t
+label=Python_add_dollarRate_nyc_chicken
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+detect_dish_contains_chicken
+add_is_in_nyc_to_menu
+add_currency_exchange_to_menu
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+added_isnyc_currency_fields_menu
+added_ischicken_field_dish
+cleaned_dish
+chicken_dish_list
+cleaned_menu
+currency_exchange_rate
+added_isnyc_fields_menu
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+detect_dish_contains_chicken -> added_ischicken_field_dish
+cleaned_dish -> detect_dish_contains_chicken
+chicken_dish_list -> detect_dish_contains_chicken
+add_is_in_nyc_to_menu -> added_isnyc_fields_menu
+cleaned_menu -> add_is_in_nyc_to_menu
+add_currency_exchange_to_menu -> added_isnyc_currency_fields_menu
+currency_exchange_rate -> add_currency_exchange_to_menu
+added_isnyc_fields_menu -> add_currency_exchange_to_menu
+}}
+subgraph cluster_input_ports_group_outer { label=""; color=white
+subgraph cluster_input_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+cleaned_menu_input_port [label=""]
+cleaned_dish_input_port [label=""]
+currency_exchange_rate_input_port [label=""]
+chicken_dish_list_input_port [label=""]
+}}
+subgraph cluster_output_ports_group_outer { label=""; color=white
+subgraph cluster_output_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+added_isnyc_currency_fields_menu_output_port [label=""]
+added_ischicken_field_dish_output_port [label=""]
+}}
+cleaned_menu_input_port -> cleaned_menu
+cleaned_dish_input_port -> cleaned_dish
+currency_exchange_rate_input_port -> currency_exchange_rate
+chicken_dish_list_input_port -> chicken_dish_list
+added_isnyc_currency_fields_menu -> added_isnyc_currency_fields_menu_output_port
+added_ischicken_field_dish -> added_ischicken_field_dish_output_port
+}

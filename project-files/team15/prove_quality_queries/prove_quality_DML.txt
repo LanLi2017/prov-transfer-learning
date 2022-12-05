@@ -1,0 +1,38 @@
+
+SELECT count(1) 
+FROM nyc_chicken ;
+-- count(1): 1222997
+
+SELECT count(1) 
+FROM nyc_chicken 
+WHERE is_nyc='Y';
+-- count(1): 152941
+
+SELECT count(1) 
+FROM nyc_chicken 
+WHERE is_chicken='Y';
+-- count(1): 42410
+
+
+------------------------------------------------------------------
+-- check chicken menu percentage & average price in 1887-1896
+------------------------------------------------------------------
+SELECT is_chicken, count(1) count, AVG(dollar_rate*price) as avg_price 
+FROM nyc_chicken 
+WHERE menu_date >= '1887-01-01' and menu_date < '1897-01-01' 
+AND is_nyc='Y'
+GROUP BY is_chicken;
+-- is_chicken Y: 328 (2.73%), $0.826
+-- is_chicken N: 11,993, $0.713
+
+------------------------------------------------------------------
+-- check chicken menu percentage & average price in 1897-1906
+------------------------------------------------------------------
+SELECT is_chicken, count(1) count, AVG(dollar_rate*price) as avg_price 
+FROM nyc_chicken
+WHERE menu_date >= '1897-01-01' and menu_date < '1907-01-01' 
+AND is_nyc='Y'
+GROUP BY is_chicken;
+-- is_chicken Y: 4310 (3.63%), $1.084
+-- is_chicken N: 118,497, $0.597
+

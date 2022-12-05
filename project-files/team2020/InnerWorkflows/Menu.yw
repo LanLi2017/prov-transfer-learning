@@ -1,0 +1,734 @@
+#@begin Parallel_OR #@desc Parallel OpenRefine Workflow
+#@param expression:value.replace(/[\\*\\?\\#\\$\\:\\^\\"\\>]+/,"_")
+#@param expression:value.replace(/[\\(\\)]+/,"_")
+#@param expression:value.replace(/\\?/,"_")
+#@param expression:value.replace(/^\\((.*)\\)$/,"$1")
+#@param expression:value.replace(/[\\*\\?\\#\\$\\:\\^\\"\\>]+/,"")
+#@param expression:value.replace(/\\s+/,'_')
+#@param expression:value.replace(/\\.$/,"")
+#@param expression:value.replace(/(.*)\\(\\s\\)/,"$1")
+#@param expression:value.trim()
+#@param expression:value.replace(/\\[.*\\]/,"")
+#@param expression:value.replace("_)",")")
+#@param expression:value.replace(/^[0](.*)/,"O$1")
+#@param expression:value.replace("(_","(")
+#@param expression:value.replace(/^(OTHER)\\,+\\s*(.*)/,"$1_($2)")
+#@param expression:grel:if_(value.contains(/anniversary/i),_"Anniversary",_value)
+#@param expression:value.replace(/AMNNUAL/i,"ANNUAL")
+#@param expression:value.replace(/^\\[(.*)\\]$/,"$1")
+#@param expression:value.replace(/^([A-Za-z\\s]+)\\;+(.*)/,"$1_($2)")
+#@param expression:value.replace("S0C","SOC")
+#@param expression:value
+#@param expression:value.replace(/\\(.*\\)/,"")
+#@param expression:value.replace(/(.*)[\\[]+.*[\\]]+/,"$1")
+#@param expression:value.replace(/\\;$/,"")
+#@param expression:value.replace("BREALFAST","BREAKFAST")
+#@param expression:value.replace(/^([A-Za-z\\s]+)\\;+\\(([A-Za-z0-9\\s]+)\\)*/,"$1_($2)")
+#@param expression:value.replace(/\\[.*/,"")
+#@param expression:value.replace(/ANNIVERSARYERSARY/i,"ANNIVERSARY")
+#@param expression:value.replace(/(.*)[\\(]+.*[\\)]+/,"$1")
+#@param expression:value.replace(/.*\\]/,"")
+#@param expression:value.replace(/^(OTHER)[\\,]+(\\(.*\\))/,"$1_$2")
+#@param expression:value.replace("BREAKRFAST","BREAKFAST")
+#@param expression:value.replace(/^[\\']+(.*)/,"$1")
+#@param expression:value.replace(/[\\[\\]]+/,"_")
+#@param expression:value.toDate()
+#@param expression:grel:if_(value.contains(/dinner/i),_"Dinner",_
+__if_(value.contains(/breakfast/i),_"Breakfast",
+____if_(value.contains(/lunch/i),_"Lunch",_
+______if_(value.contains(/luncheon/i),_"Luncheon",_
+________if_(value.contains(/banquet/i),_"Banquet",_
+__________if_(value.contains(/supper/i),_"Supper",_value)))))))
+#@param expression:value.toNumber()
+#@param expression:value.replace(/\\"/,"_")
+#@param expression:value.replace(/commemoative/i,"COMMEMORATIVE")
+#@param expression:value.replace(/^(OTHER)\\,+\\[([a-zA-Z0-9\\.\\s]*)\\]/,"$1_($2)")
+#@param expression:value.replace(/[\\;]$/,"")
+#@in occasion_32
+#@in event_27
+#@in event_13
+#@in occasion_38
+#@in occasion_17
+#@in event_19
+#@in occasion_37
+#@in occasion_29
+#@in occasion_5
+#@in event_20
+#@in occasion_50
+#@in name_4
+#@in occasion_52
+#@in occasion_36
+#@in occasion_33
+#@in name_8
+#@in occasion_39
+#@in event_16
+#@in event_12
+#@in event_6
+#@in event_2
+#@in event_23
+#@in occasion_8
+#@in occasion_24
+#@in name_3
+#@in event_29
+#@in event_26
+#@in event_28
+#@in occasion_4
+#@in occasion_45
+#@in event_14
+#@in event_32
+#@in occasion_30
+#@in occasion_3
+#@in occasion_14
+#@in event_37
+#@in event_15
+#@in event_18
+#@in occasion_56
+#@in event_21
+#@in name_5
+#@in name_10
+#@in id
+#@in occasion_18
+#@in name_2
+#@in name_7
+#@in page_count
+#@in event
+#@in event_1
+#@in event_34
+#@in occasion_28
+#@in name_9
+#@in name_6
+#@in event_22
+#@in event_4
+#@in event_30
+#@in occasion_22
+#@in occasion_48
+#@in event_24
+#@in occasion_20
+#@in event_9
+#@in occasion_54
+#@in occasion_40
+#@in name
+#@in date
+#@in occasion_19
+#@in event_5
+#@in occasion_7
+#@in occasion_43
+#@in occasion_44
+#@in occasion_15
+#@in occasion_49
+#@in occasion_53
+#@in event_25
+#@in occasion_26
+#@in occasion_42
+#@in event_31
+#@in occasion_46
+#@in event_3
+#@in occasion_1
+#@in occasion_23
+#@in occasion_57
+#@in occasion_31
+#@in occasion_25
+#@in event_17
+#@in occasion_55
+#@in occasion_2
+#@in occasion_21
+#@in occasion_47
+#@in occasion_27
+#@in event_10
+#@in occasion
+#@in occasion_13
+#@in event_8
+#@in occasion_41
+#@in occasion_6
+#@in event_33
+#@in occasion_16
+#@in event_35
+#@in occasion_11
+#@in occasion_35
+#@in event_7
+#@in occasion_34
+#@in occasion_51
+#@in event_11
+#@in occasion_9
+#@in event_36
+#@in occasion_10
+#@in occasion_12
+#@in name_1
+#@in dish_count
+#@out CleanData
+#@begin core/text-transform0 #@desc Text transform on cells in column name using expression value.trim()
+#@param expression:value.trim()
+#@in name
+#@out name_1
+#@end core/text-transform0
+#@begin core/text-transform1 #@desc Text transform on cells in column name using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in name_1
+#@out name_2
+#@end core/text-transform1
+#@begin core/text-transform2 #@desc Text transform on cells in column name using expression value.replace(/[\\*\\?\\#\\$\\:\\^\\\"\\>]+/,\"\")
+#@param expression:value.replace(/[\\*\\?\\#\\$\\:\\^\\"\\>]+/,"")
+#@in name_2
+#@out name_3
+#@end core/text-transform2
+#@begin core/text-transform3 #@desc Text transform on cells in column name using expression value.replace(/\\[.*\\]/,\"\")
+#@param expression:value.replace(/\\[.*\\]/,"")
+#@in name_3
+#@out name_4
+#@end core/text-transform3
+#@begin core/text-transform4 #@desc Text transform on cells in column name using expression value.replace(/\\(.*\\)/,\"\")
+#@param expression:value.replace(/\\(.*\\)/,"")
+#@in name_4
+#@out name_5
+#@end core/text-transform4
+#@begin core/text-transform5 #@desc Text transform on cells in column name using expression value.trim()
+#@param expression:value.trim()
+#@in name_5
+#@out name_6
+#@end core/text-transform5
+#@begin core/text-transform6 #@desc Text transform on cells in column name using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in name_6
+#@out name_7
+#@end core/text-transform6
+#@begin core/text-transform7 #@desc Text transform on cells in column date using expression value.toDate()
+#@param expression:value.toDate()
+#@in date
+#@out date_1
+#@end core/text-transform7
+#@begin core/text-transform8 #@desc Text transform on cells in column page_count using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in page_count
+#@out page_count_1
+#@end core/text-transform8
+#@begin core/text-transform9 #@desc Text transform on cells in column dish_count using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in dish_count
+#@out dish_count_1
+#@end core/text-transform9
+#@begin core/text-transform10 #@desc Text transform on cells in column name using expression value.replace(/\\[.*/,\"\")
+#@param expression:value.replace(/\\[.*/,"")
+#@in name_7
+#@out name_8
+#@end core/text-transform10
+#@begin core/mass-edit11 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_8
+#@out name_9
+#@end core/mass-edit11
+#@begin core/text-transform12 #@desc Text transform on cells in column name using expression value.replace(/.*\\]/,\"\")
+#@param expression:value.replace(/.*\\]/,"")
+#@in name_9
+#@out name_10
+#@end core/text-transform12
+#@begin core/text-transform13 #@desc Text transform on cells in column event using expression value.replace(/[\\*\\?\\#\\$\\:\\^\\\"\\>]+/,\" \")
+#@param expression:value.replace(/[\\*\\?\\#\\$\\:\\^\\"\\>]+/,"_")
+#@in event
+#@out event_1
+#@end core/text-transform13
+#@begin core/text-transform14 #@desc Text transform on cells in column event using expression value.replace(/[\\(\\)]+/,\" \")
+#@param expression:value.replace(/[\\(\\)]+/,"_")
+#@in event_1
+#@out event_2
+#@end core/text-transform14
+#@begin core/text-transform15 #@desc Text transform on cells in column event using expression value.replace(/[\\[\\]]+/,\" \")
+#@param expression:value.replace(/[\\[\\]]+/,"_")
+#@in event_2
+#@out event_3
+#@end core/text-transform15
+#@begin core/text-transform16 #@desc Text transform on cells in column event using expression value.trim()
+#@param expression:value.trim()
+#@in event_3
+#@out event_4
+#@end core/text-transform16
+#@begin core/mass-edit17 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_4
+#@out event_5
+#@end core/mass-edit17
+#@begin core/text-transform18 #@desc Text transform on cells in column event using expression value.replace(/^[\\']+(.*)/,\"$1\")
+#@param expression:value.replace(/^[\\']+(.*)/,"$1")
+#@in event_5
+#@out event_6
+#@end core/text-transform18
+#@begin core/text-transform19 #@desc Text transform on cells in column event using expression value.replace(\"BREALFAST\",\"BREAKFAST\")
+#@param expression:value.replace("BREALFAST","BREAKFAST")
+#@in event_6
+#@out event_7
+#@end core/text-transform19
+#@begin core/text-transform20 #@desc Text transform on cells in column event using expression value.replace(\"BREAKRFAST\",\"BREAKFAST\")
+#@param expression:value.replace("BREAKRFAST","BREAKFAST")
+#@in event_7
+#@out event_8
+#@end core/text-transform20
+#@begin core/text-transform21 #@desc Text transform on cells in column occasion using expression value.replace(/\\;$/,\"\")
+#@param expression:value.replace(/\\;$/,"")
+#@in occasion
+#@out occasion_1
+#@end core/text-transform21
+#@begin core/text-transform22 #@desc Text transform on cells in column occasion using expression value.replace(/\\?/,\" \")
+#@param expression:value.replace(/\\?/,"_")
+#@in occasion_1
+#@out occasion_2
+#@end core/text-transform22
+#@begin core/text-transform23 #@desc Text transform on cells in column occasion using expression value.replace(/^\\[(.*)\\]$/,\"$1\")
+#@param expression:value.replace(/^\\[(.*)\\]$/,"$1")
+#@in occasion_2
+#@out occasion_3
+#@end core/text-transform23
+#@begin core/text-transform24 #@desc Text transform on cells in column occasion using expression value.replace(/^\\((.*)\\)$/,\"$1\")
+#@param expression:value.replace(/^\\((.*)\\)$/,"$1")
+#@in occasion_3
+#@out occasion_4
+#@end core/text-transform24
+#@begin core/text-transform25 #@desc Text transform on cells in column occasion using expression value.replace(/(.*)\\(\\s\\)/,\"$1\")
+#@param expression:value.replace(/(.*)\\(\\s\\)/,"$1")
+#@in occasion_4
+#@out occasion_5
+#@end core/text-transform25
+#@begin core/text-transform26 #@desc Text transform on cells in column occasion using expression value.replace(/^[0](.*)/,\"O$1\")
+#@param expression:value.replace(/^[0](.*)/,"O$1")
+#@in occasion_5
+#@out occasion_6
+#@end core/text-transform26
+#@begin core/text-transform27 #@desc Text transform on cells in column occasion using expression value.replace(/\\;$/,\"\")
+#@param expression:value.replace(/\\;$/,"")
+#@in occasion_6
+#@out occasion_7
+#@end core/text-transform27
+#@begin core/text-transform28 #@desc Text transform on cells in column occasion using expression value.replace(/\\\"/,\" \")
+#@param expression:value.replace(/\\"/,"_")
+#@in occasion_7
+#@out occasion_8
+#@end core/text-transform28
+#@begin core/text-transform29 #@desc Text transform on cells in column occasion using expression value.replace(/\\.$/,\"\")
+#@param expression:value.replace(/\\.$/,"")
+#@in occasion_8
+#@out occasion_9
+#@end core/text-transform29
+#@begin core/text-transform30 #@desc Text transform on cells in column occasion using expression value.trim()
+#@param expression:value.trim()
+#@in occasion_9
+#@out occasion_10
+#@end core/text-transform30
+#@begin core/text-transform31 #@desc Text transform on cells in column occasion using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in occasion_10
+#@out occasion_11
+#@end core/text-transform31
+#@begin core/mass-edit32 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_11
+#@out occasion_12
+#@end core/mass-edit32
+#@begin core/text-transform33 #@desc Text transform on cells in column occasion using expression value.trim()
+#@param expression:value.trim()
+#@in occasion_12
+#@out occasion_13
+#@end core/text-transform33
+#@begin core/text-transform34 #@desc Text transform on cells in column occasion using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in occasion_13
+#@out occasion_14
+#@end core/text-transform34
+#@begin core/text-transform35 #@desc Text transform on cells in column occasion using expression value.replace(/^(OTHER)[\\,]+(\\(.*\\))/,\"$1 $2\")
+#@param expression:value.replace(/^(OTHER)[\\,]+(\\(.*\\))/,"$1_$2")
+#@in occasion_14
+#@out occasion_15
+#@end core/text-transform35
+#@begin core/text-transform36 #@desc Text transform on cells in column occasion using expression value.replace(/^(OTHER)\\,+\\[([a-zA-Z0-9\\.\\s]*)\\]/,\"$1 ($2)\")
+#@param expression:value.replace(/^(OTHER)\\,+\\[([a-zA-Z0-9\\.\\s]*)\\]/,"$1_($2)")
+#@in occasion_15
+#@out occasion_16
+#@end core/text-transform36
+#@begin core/text-transform37 #@desc Text transform on cells in column occasion using expression value.replace(/^(OTHER)\\,+\\s*(.*)/,\"$1 ($2)\")
+#@param expression:value.replace(/^(OTHER)\\,+\\s*(.*)/,"$1_($2)")
+#@in occasion_16
+#@out occasion_17
+#@end core/text-transform37
+#@begin core/text-transform38 #@desc Text transform on cells in column occasion using expression value.replace(\"S0C\",\"SOC\")
+#@param expression:value.replace("S0C","SOC")
+#@in occasion_17
+#@out occasion_18
+#@end core/text-transform38
+#@begin core/text-transform39 #@desc Text transform on cells in column occasion using expression value.trim()
+#@param expression:value.trim()
+#@in occasion_18
+#@out occasion_19
+#@end core/text-transform39
+#@begin core/text-transform40 #@desc Text transform on cells in column occasion using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in occasion_19
+#@out occasion_20
+#@end core/text-transform40
+#@begin core/mass-edit41 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_20
+#@out occasion_21
+#@end core/mass-edit41
+#@begin core/text-transform42 #@desc Text transform on cells in column occasion using expression value.replace(/^([A-Za-z\\s]+)\\;+\\(([A-Za-z0-9\\s]+)\\)*/,\"$1 ($2)\")
+#@param expression:value.replace(/^([A-Za-z\\s]+)\\;+\\(([A-Za-z0-9\\s]+)\\)*/,"$1_($2)")
+#@in occasion_21
+#@out occasion_22
+#@end core/text-transform42
+#@begin core/mass-edit43 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_22
+#@out occasion_23
+#@end core/mass-edit43
+#@begin core/text-transform44 #@desc Text transform on cells in column occasion using expression value.replace(/^([A-Za-z\\s]+)\\;+(.*)/,\"$1 ($2)\")
+#@param expression:value.replace(/^([A-Za-z\\s]+)\\;+(.*)/,"$1_($2)")
+#@in occasion_23
+#@out occasion_24
+#@end core/text-transform44
+#@begin core/mass-edit45 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_24
+#@out occasion_25
+#@end core/mass-edit45
+#@begin core/text-transform46 #@desc Text transform on cells in column occasion using expression value.trim()
+#@param expression:value.trim()
+#@in occasion_25
+#@out occasion_26
+#@end core/text-transform46
+#@begin core/text-transform47 #@desc Text transform on cells in column occasion using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in occasion_26
+#@out occasion_27
+#@end core/text-transform47
+#@begin core/text-transform48 #@desc Text transform on cells in column occasion using expression value.replace(\"( \",\"(\")
+#@param expression:value.replace("(_","(")
+#@in occasion_27
+#@out occasion_28
+#@end core/text-transform48
+#@begin core/text-transform49 #@desc Text transform on cells in column occasion using expression value.replace(\" )\",\")\")
+#@param expression:value.replace("_)",")")
+#@in occasion_28
+#@out occasion_29
+#@end core/text-transform49
+#@begin core/text-transform50 #@desc Text transform on cells in column occasion using expression value.replace(/commemoative/i,\"COMMEMORATIVE\")
+#@param expression:value.replace(/commemoative/i,"COMMEMORATIVE")
+#@in occasion_29
+#@out occasion_30
+#@end core/text-transform50
+#@begin core/text-transform51 #@desc Text transform on cells in column occasion using expression value.replace(/ANNIVERSARYERSARY/i,\"ANNIVERSARY\")
+#@param expression:value.replace(/ANNIVERSARYERSARY/i,"ANNIVERSARY")
+#@in occasion_30
+#@out occasion_31
+#@end core/text-transform51
+#@begin core/text-transform52 #@desc Text transform on cells in column occasion using expression value.replace(/AMNNUAL/i,\"ANNUAL\")
+#@param expression:value.replace(/AMNNUAL/i,"ANNUAL")
+#@in occasion_31
+#@out occasion_32
+#@end core/text-transform52
+#@begin core/mass-edit53 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_32
+#@out occasion_33
+#@end core/mass-edit53
+#@begin core/mass-edit54 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_33
+#@out occasion_34
+#@end core/mass-edit54
+#@begin core/mass-edit55 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_34
+#@out occasion_35
+#@end core/mass-edit55
+#@begin core/mass-edit56 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_35
+#@out occasion_36
+#@end core/mass-edit56
+#@begin core/mass-edit57 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_36
+#@out occasion_37
+#@end core/mass-edit57
+#@begin core/mass-edit58 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_37
+#@out occasion_38
+#@end core/mass-edit58
+#@begin core/mass-edit59 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_38
+#@out occasion_39
+#@end core/mass-edit59
+#@begin core/mass-edit60 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_39
+#@out occasion_40
+#@end core/mass-edit60
+#@begin core/mass-edit61 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_40
+#@out occasion_41
+#@end core/mass-edit61
+#@begin core/mass-edit62 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_41
+#@out occasion_42
+#@end core/mass-edit62
+#@begin core/mass-edit63 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_42
+#@out occasion_43
+#@end core/mass-edit63
+#@begin core/mass-edit64 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_43
+#@out occasion_44
+#@end core/mass-edit64
+#@begin core/mass-edit65 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_44
+#@out occasion_45
+#@end core/mass-edit65
+#@begin core/mass-edit66 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_45
+#@out occasion_46
+#@end core/mass-edit66
+#@begin core/mass-edit67 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_46
+#@out occasion_47
+#@end core/mass-edit67
+#@begin core/text-transform68 #@desc Text transform on cells in column id using expression value.toNumber()
+#@param expression:value.toNumber()
+#@in id
+#@out id_1
+#@end core/text-transform68
+#@begin core/mass-edit69 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_8
+#@out event_9
+#@end core/mass-edit69
+#@begin core/mass-edit70 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_9
+#@out event_10
+#@end core/mass-edit70
+#@begin core/mass-edit71 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_10
+#@out event_11
+#@end core/mass-edit71
+#@begin core/mass-edit72 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_11
+#@out event_12
+#@end core/mass-edit72
+#@begin core/mass-edit73 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_47
+#@out occasion_48
+#@end core/mass-edit73
+#@begin core/text-transform74 #@desc Text transform on cells in column occasion using expression value.replace(/(.*)[\\(]+.*[\\)]+/,\"$1\")
+#@param expression:value.replace(/(.*)[\\(]+.*[\\)]+/,"$1")
+#@in occasion_48
+#@out occasion_49
+#@end core/text-transform74
+#@begin core/mass-edit75 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_49
+#@out occasion_50
+#@end core/mass-edit75
+#@begin core/mass-edit76 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_50
+#@out occasion_51
+#@end core/mass-edit76
+#@begin core/mass-edit77 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_51
+#@out occasion_52
+#@end core/mass-edit77
+#@begin core/mass-edit78 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_52
+#@out occasion_53
+#@end core/mass-edit78
+#@begin core/text-transform79 #@desc Text transform on cells in column occasion using expression value.replace(/(.*)[\\[]+.*[\\]]+/,\"$1\")
+#@param expression:value.replace(/(.*)[\\[]+.*[\\]]+/,"$1")
+#@in occasion_53
+#@out occasion_54
+#@end core/text-transform79
+#@begin core/mass-edit80 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_54
+#@out occasion_55
+#@end core/mass-edit80
+#@begin core/mass-edit81 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_55
+#@out occasion_56
+#@end core/mass-edit81
+#@begin core/mass-edit82 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_12
+#@out event_13
+#@end core/mass-edit82
+#@begin core/text-transform83 #@desc Text transform on cells in column event using expression value.replace(/[\\;]$/,\"\")
+#@param expression:value.replace(/[\\;]$/,"")
+#@in event_13
+#@out event_14
+#@end core/text-transform83
+#@begin core/mass-edit84 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_14
+#@out event_15
+#@end core/mass-edit84
+#@begin core/mass-edit85 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_15
+#@out event_16
+#@end core/mass-edit85
+#@begin core/mass-edit86 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_16
+#@out event_17
+#@end core/mass-edit86
+#@begin core/mass-edit87 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_17
+#@out event_18
+#@end core/mass-edit87
+#@begin core/mass-edit88 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_18
+#@out event_19
+#@end core/mass-edit88
+#@begin core/mass-edit89 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_19
+#@out event_20
+#@end core/mass-edit89
+#@begin core/mass-edit90 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_20
+#@out event_21
+#@end core/mass-edit90
+#@begin core/text-transform91 #@desc Text transform on cells in column event using expression grel:if (value.contains(/dinner/i), \"Dinner\", 
+  if (value.contains(/breakfast/i), \"Breakfast\",
+    if (value.contains(/lunch/i), \"Lunch\", 
+      if (value.contains(/luncheon/i), \"Luncheon\", 
+        if (value.contains(/banquet/i), \"Banquet\", 
+          if (value.contains(/supper/i), \"Supper\", value)))))))
+#@param expression:grel:if_(value.contains(/dinner/i),_"Dinner",_
+__if_(value.contains(/breakfast/i),_"Breakfast",
+____if_(value.contains(/lunch/i),_"Lunch",_
+______if_(value.contains(/luncheon/i),_"Luncheon",_
+________if_(value.contains(/banquet/i),_"Banquet",_
+__________if_(value.contains(/supper/i),_"Supper",_value)))))))
+#@in event_21
+#@out event_22
+#@end core/text-transform91
+#@begin core/mass-edit92 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_22
+#@out event_23
+#@end core/mass-edit92
+#@begin core/mass-edit93 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_23
+#@out event_24
+#@end core/mass-edit93
+#@begin core/mass-edit94 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_24
+#@out event_25
+#@end core/mass-edit94
+#@begin core/mass-edit95 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_25
+#@out event_26
+#@end core/mass-edit95
+#@begin core/mass-edit96 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_26
+#@out event_27
+#@end core/mass-edit96
+#@begin core/mass-edit97 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_27
+#@out event_28
+#@end core/mass-edit97
+#@begin core/mass-edit98 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_28
+#@out event_29
+#@end core/mass-edit98
+#@begin core/mass-edit99 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_29
+#@out event_30
+#@end core/mass-edit99
+#@begin core/mass-edit100 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_30
+#@out event_31
+#@end core/mass-edit100
+#@begin core/mass-edit101 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_31
+#@out event_32
+#@end core/mass-edit101
+#@begin core/mass-edit102 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_32
+#@out event_33
+#@end core/mass-edit102
+#@begin core/text-transform103 #@desc Text transform on cells in column event using expression grel:if (value.contains(/anniversary/i), \"Anniversary\", value)
+#@param expression:grel:if_(value.contains(/anniversary/i),_"Anniversary",_value)
+#@in event_33
+#@out event_34
+#@end core/text-transform103
+#@begin core/mass-edit104 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_34
+#@out event_35
+#@end core/mass-edit104
+#@begin core/mass-edit105 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_35
+#@out event_36
+#@end core/mass-edit105
+#@begin core/mass-edit106 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_36
+#@out event_37
+#@end core/mass-edit106
+#@begin core/mass-edit107 #@desc Mass edit cells in column event
+#@param expression:value
+#@in event_37
+#@out event_38
+#@end core/mass-edit107
+#@begin core/mass-edit108 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_56
+#@out occasion_57
+#@end core/mass-edit108
+#@begin core/mass-edit109 #@desc Mass edit cells in column occasion
+#@param expression:value
+#@in occasion_57
+#@out occasion_58
+#@end core/mass-edit109
+#@begin core/mass-edit110 #@desc Mass edit cells in column name
+#@param expression:value
+#@in name_10
+#@out name_11
+#@end core/mass-edit110
+#@begin CombineDataCleaningChanges
+#@in name_11
+#@in date_1
+#@in page_count_1
+#@in dish_count_1
+#@in event_38
+#@in occasion_58
+#@in id_1
+#@out CleanData
+#@end CombineDataCleaningChanges
+#@end Parallel_OR

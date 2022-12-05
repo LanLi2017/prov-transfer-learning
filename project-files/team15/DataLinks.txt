@@ -1,0 +1,33 @@
+Here are our supplementary materials’ link. All of the files below can be accessed through the publicly opened U of I Box folder: https://uofi.box.com/s/g89zwamb9bl1aasfuw5n19pjw5qz19jj
+
+Original Dataset
+	CS513-Summer2021-Dataset > Menu_2021_06_16_07_01_26_data: https://uofi.app.box.com/s/y7123ku1dpzd4m3126sqvpa2agvv08hv/folder/139744503005
+	
+Intermediate Dataset
+	After_OpenRefine.zip: https://uofi.box.com/s/cgzk01ogpodphiht7j5n6ynl7sgkuldc
+	NYPL_only_necessary_columns.zip: https://uofi.box.com/s/pmbfvmlsm0gng3eqsrplp2e2u2xadh4v
+	
+Final Cleaned Dataset
+	afterAddingCurrAndNyc.zip: https://uofi.box.com/s/0nxg5q61szj78we2ckwofqxsrbkkqwub
+	
+Conceptual model / database schema
+	ERD.png: https://uofi.box.com/s/u56qq6dkxo4o16hvzokfi33bjp4ddk93
+	MySQL_DDL.txt: https://uofi.box.com/s/kaswb3esmi9mwdepsqczgw134q7m3cr1
+	
+Operation History
+	OpenRefineHistory_menu.json: https://uofi.box.com/s/24k7gs9ha4vdy0pevi8wfjgsyept5xvi
+	OpenRefineHistory_dish.json: https://uofi.box.com/s/qodpa37v3ohjdrntlnfzmp14i0jwfoa1
+	Python Script (CS513_Final_Project.ipynb): https://uofi.box.com/s/uuc85mnzx0osl2s0oawtecmhi3q2t3wc
+	
+Queries
+	Queries.txt: https://uofi.box.com/s/xdcyshqxd9kqy49ladkumfqwl0cp7z0x
+	
+Outer and Inner Workflow Models
+	YW annotations files (these .py files has YesWorkflow annotations so we do not change the file extension as if .yw): 
+		Outer_workflow.py https://uofi.box.com/s/qv9y93c5beup7fvvft9u6ukhwtw57s4h 
+		python_remove_unnecessary_fields.py https://uofi.box.com/s/8sy4c5lsvqvw4pouqo18pxaquhm4ryx1 
+		python_add_dollarRate_nyc_chicken.py https://uofi.box.com/s/s23rhitmtp3v26m4phqh7m6ev3bo1p3p 
+	YW-generated Graphviz/DOT files (OverallWorkflow.gv): 
+		Outer_workflow.gv https://uofi.box.com/s/x9s2kj6j7s9icwsnaoh93134fu0ttpyw 
+		python_remove_unnecessary_fields.gv https://uofi.box.com/s/k6ulps6azqqaligy2jnlklpk24fd9pbx 
+		python_add_dollarRate_nyc_chicken.gv https://uofi.box.com/s/9fi59wvgvo3sekhqoyxjk79y7u91o9xe 

@@ -1,0 +1,31 @@
+# @begin NYPLMenuDataset @desc NYPL Menu Dataset
+# @in menu_file
+# @in dish_file
+# @in menuitem_file
+# @in menupage_file
+
+
+    
+
+    # @begin OpenRefine_Loading @desc Load Files in OpenRefine
+    # @in menu_file
+    # @in dish_file
+    # @in menuitem_file
+    # @in menupage_file
+    # @out analyze_data
+    # @end OpenRefine_Loading
+
+    # @begin analyze_data @desc Analyze data using OpenRefine using Text Facets and Filters
+    # @end analyze_data
+    
+    # @begin clean_data @desc Clean data using OpenRefine using Clusters, GREL
+    # @in analyze_data
+    # @end clean_data
+    
+
+    # @begin ICV_Queries @desc Run ICV Queries in SQLite to verify data and test case U1.
+    # @in clean_data
+    # @out results @as cleaned_data @file stream:stdout @desc dd
+    # @end ICV_Queries
+
+# @end NYPLMenuDataset
