@@ -25,11 +25,6 @@ def get_project_name(project_id):
     # get the project name
     return refine.Refine(refine.RefineServer()).get_project_name(project_id)
 
-
-def get_project_id():
-    # get the project id
-    return refine.Refine(refine.RefineServer()).get_project_id()
-
 def project_name(project_id):
     # functions in RefineProject:
     # project_name
@@ -42,7 +37,7 @@ def list_history(project_id):
     return refine.RefineProject(refine.RefineServer(),project_id).list_history()
 
 def undo_redo(project_id,lastDone_id):
-    return refine.RefineProject(refine.RefineServer(),project_id).undo_project(lastDone_id)
+    return refine.RefineProject(refine.RefineServer(),project_id).undo_redo_project(lastDone_id)
 
 """
 Niko
@@ -113,12 +108,6 @@ def apply_operations(project_id,file_path):
 def export(project_id,export_format='tsv') :
     # export : return a fileobject of a project's data.
     return refine.RefineProject(refine.RefineServer(),project_id).export(export_format)
-
-
-def export_templating(project_id):
-    # export templating: return a fileobject of a project's data
-    return refine.RefineProject(refine.RefineServer(),project_id).export_templating(export_format='txt', engine='', prefix='', template='', rowSeparator='', suffix='')
-
 
 def export_rows(project_id,**kwargs):
     # return an iterable of parsed rows of a project's data
