@@ -3,3 +3,4 @@ project-files/*/datasets/*
 project-files/*/clean-datasets/*
 project-files/*/*.db
 .DS_Store 
+.DS_Store

@@ -9,6 +9,7 @@ def op_summarize(json_file):
     op_list = []
     col_list = []
     steps_list = []
+    print(json_file)
     with open(json_file, 'rt')as f:
         json_data = json.load(f)
         for step_id,data in enumerate(json_data):
@@ -49,8 +50,8 @@ def save_metadata(json_files):
     df['Column Name'] = col_n_col
     df['Step ID'] = steps_col
     df.index.name = 'Index'
-    # df.to_csv('workflow-analysis/metadata.csv')
-    df.to_csv('workflow-analysis/test_metadata.csv')
+    df.to_csv('workflow-analysis/metadata.csv')
+    # df.to_csv('workflow-analysis/test_metadata.csv')
     # print(df)
     return df
 
@@ -144,17 +145,17 @@ def viz_kb():
     
 
 def main():
-    json_files = ['dish-oh/test-dish.json']
-    # json_files = [
-    # 'dish-oh/team3-OpenRefineHistory_Dish.json']
-                #   'dish-oh/team15-OpenRefineHistory_Dish.json',
-                #   'dish-oh/team140-OpenRefineHistory_Dish.json',
-                #   'dish-oh/team2020-OpenRefineHistory_Dish.json',
-                #   'dish-oh/team2022-OpenRefineHistory_Dish.json'
-                # ]
+    # json_files = ['dish-oh/test-dish.json']
+    json_files = [
+                  'dish-oh/team3-OpenRefineHistory_Dish.json',
+                  'dish-oh/team15-OpenRefineHistory_Dish.json',
+                  'dish-oh/team140-OpenRefineHistory_Dish.json',
+                  #   'dish-oh/team2020-OpenRefineHistory_Dish.json',
+                  'dish-oh/team2022-OpenRefineHistory_Dish.json'
+    ]
     df = save_metadata(json_files)
-    recipe_kb = mass_edit_analysis(df)
-    pprint(recipe_kb)
+    # recipe_kb = mass_edit_analysis(df)
+    # pprint(recipe_kb)
 
 
 if __name__ == '__main__':
