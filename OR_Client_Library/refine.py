@@ -27,8 +27,8 @@ import json
 
 from google_refine.refine import refine
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 class myParser(optparse.OptionParser):
 
@@ -202,7 +202,7 @@ def create_project(options):
     # defaults for selected format
     input_dict = defaults[input_format]
     # user input
-    input_user = { group4_arg.dest : getattr(options, group4_arg.dest) for group4_arg in group4.option_list }
+    input_user = { group4_arg.dest : getattr(options, group4_arg.dest) for group4_arg in group4.option_list }  # type: ignore
     input_user['strings'] = { k: v for k, v in input_user.items() if v != None and v not in ['true', 'false'] }
     input_user['trues'] = { k: True for k, v in input_user.items() if v == 'true' }
     input_user['falses'] = { k: False for k, v in input_user.items() if v == 'false' }
