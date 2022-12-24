@@ -1,0 +1,129 @@
+[
+      {
+            "op": "core/text-transform",
+            "engineConfig": {
+                  "facets": [],
+                  "mode": "row-based"
+            },
+            "columnName": "value",
+            "expression": "value.toLowercase()",
+            "onError": "keep-original",
+            "repeat": false,
+            "repeatCount": 10,
+            "description": "Text transform on 0 cells in column value: value.toLowercase()",
+            "id": 1671837986178,
+            "time": "2022-12-23T23:24:44Z"
+      },
+      {
+            "op": "core/mass-edit",
+            "engineConfig": {
+                  "facets": [],
+                  "mode": "row-based"
+            },
+            "columnName": "value",
+            "expression": "value",
+            "edits": [
+                  {
+                        "from": [
+                              "a"
+                        ],
+                        "fromBlank": false,
+                        "fromError": false,
+                        "to": "b",
+                        "changed-cells": [
+                              [
+                                    0,
+                                    "value"
+                              ],
+                              [
+                                    8,
+                                    "value"
+                              ]
+                        ]
+                  }
+            ],
+            "description": "Mass edit 2 cells in column value",
+            "id": 1671838417369,
+            "time": "2022-12-23T23:24:44Z"
+      },
+      {
+            "op": "core/mass-edit",
+            "engineConfig": {
+                  "facets": [],
+                  "mode": "row-based"
+            },
+            "columnName": "value",
+            "expression": "value",
+            "edits": [
+                  {
+                        "from": [
+                              "b"
+                        ],
+                        "fromBlank": false,
+                        "fromError": false,
+                        "to": "c",
+                        "changed-cells": [
+                              [
+                                    0,
+                                    "value"
+                              ],
+                              [
+                                    1,
+                                    "value"
+                              ],
+                              [
+                                    2,
+                                    "value"
+                              ],
+                              [
+                                    8,
+                                    "value"
+                              ],
+                              [
+                                    9,
+                                    "value"
+                              ]
+                        ]
+                  }
+            ],
+            "description": "Mass edit 5 cells in column value",
+            "id": 1671837983336,
+            "time": "2022-12-23T23:24:44Z"
+      },
+      {
+            "op": "core/mass-edit",
+            "engineConfig": {
+                  "facets": [],
+                  "mode": "row-based"
+            },
+            "columnName": "value",
+            "expression": "value",
+            "edits": [
+                  {
+                        "from": [
+                              "e"
+                        ],
+                        "fromBlank": false,
+                        "fromError": false,
+                        "to": "a",
+                        "changed-cells": [
+                              [
+                                    5,
+                                    "value"
+                              ],
+                              [
+                                    6,
+                                    "value"
+                              ],
+                              [
+                                    10,
+                                    "value"
+                              ]
+                        ]
+                  }
+            ],
+            "description": "Mass edit 3 cells in column value",
+            "id": 1671838590816,
+            "time": "2022-12-23T23:24:44Z"
+      }
+]

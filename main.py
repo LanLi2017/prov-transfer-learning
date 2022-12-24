@@ -2,7 +2,9 @@ import json
 from pathlib import Path
 from pprint import pprint
 import pandas as pd
-
+from OR_Client_Library.google_refine.refine import refine
+# recipes without merging: dish-oh/*.json
+# recipe with merging: prepared_recipe/*.json
 
 def op_summarize(json_file):
     json_list = []
@@ -210,19 +212,98 @@ def mass_edit_offset(df, col_name='name'):
     return mass_edits_integrate    
 
 
-def clean_mass_edits(mass_edits):
-    #TODO: resolve the conflicts of the mass edits across recipes
-    # Deal with overwritten/conflicts across JSON file
-    pass
-
-
 def viz_kb():
     #TODO NEO4j could be better db [draw the knowledge graph]
 
     pass
-    
 
-def main():
+
+def oh_map_history(op):
+    '''
+        operation history from data.txt
+        => include a complete record (single-edit; star/flag rows)
+    '''
+    oh_list = op.get_operations()
+
+    '''
+        history list: 
+        history id; time stamp; description [retrospective provenance]
+    '''
+    histories = op.list_history()  # history id/ time/ desc
+    past_histories = histories['past']
+
+    assert len(oh_list) == len(past_histories)
+    map_result = [
+        {**oh, **history}
+        for oh, history in zip(oh_list, past_histories)
+    ]
+    # description will be overwrite with retrospective info from history list.
+    return oh_list, past_histories, map_result
+
+
+def load_ds_from_or(project_id):
+    # load dataset from openrefine client library 
+    # return: list of dictionary [{column-name: cell-value, ...},...]
+    or_server = refine.RefineProject(refine.RefineServer(), project_id) 
+    res = or_server.export_rows()
+    ds_dict = list(res)
+    return ds_dict
+
+
+def diff_ds(prev_ds, cur_ds, edits):
+    '''premise: mass-edits will not change the data structure; so prev_ds and cur_ds share the same shape'''
+    # compare two list dictionaries 
+    # return edits with signature (record id, column name)
+    for row_id, prev_row_value in enumerate(prev_ds):
+        cur_row_value = cur_ds[row_id]
+        for col_name, prev_cell_value in prev_row_value.items():
+            cur_cell_value = cur_row_value[col_name]
+            if cur_cell_value == prev_cell_value:
+                pass
+            else:
+                for edit in edits:
+                    if prev_cell_value in edit['from'] and cur_cell_value==edit['to']:
+                        # locate the place to add key-value provenance pair
+                        edit.setdefault('changed-cells', []).append((row_id, col_name))
+                    else:
+                        edit = edit
+                        # if 'changed-cells' in edits:
+                        #     edit['changed-cells'].append((row_id, col_name))
+                        # else:
+                        #     edit.update({'changed-cells': [(row_id, col_name)]})
+    return edits
+
+
+def prov_enable_recipe(project_id, recipe, col_name='name'): 
+    # recipe with record-id preservation: prov_save_recipe/*.json
+    # return: add a key-value pair under "edits": changed-cells:[((record id, column name, function))]
+    or_server = refine.RefineProject(refine.RefineServer(), project_id) # load openrefine project 
+    or_server.undo_redo_project(0) # initialize project status 
+    response_res = or_server.apply_operations(recipe)
+    print(response_res)
+    oh_list, past_histories, map_result = oh_map_history(or_server)
+    for op_idx,op_dict in enumerate(map_result):
+        if op_dict['op'] == 'core/mass-edit' and op_dict['columnName']==col_name:
+            prev_idx = op_idx-1
+            if prev_idx <0:
+                assert prev_idx == -1
+                # in this case, previous status is the clean dataset 
+                prev_history_id = 0  
+            else:
+                prev_history_id = map_result[prev_idx]['id']
+            cur_history_id = op_dict['id']
+            or_server.undo_redo_project(prev_history_id)
+            prev_ds = load_ds_from_or(project_id)
+            or_server.undo_redo_project(cur_history_id)
+            cur_ds = load_ds_from_or(project_id)
+            edits_op = op_dict['edits']
+            assert type(edits_op) is list
+            op_dict['edits'] = diff_ds(prev_ds, cur_ds, edits_op)
+    pprint(map_result)
+    return map_result
+
+
+def save_merged_recipe():
     # json_files = ['dish-oh/test-dish.json']
     json_files = [
         'dish-oh/temp-oh.json'
@@ -238,6 +319,19 @@ def main():
     with open('prepared_recipe/temp_prepared.json', 'wt') as fp:
         json.dump(recipe_kb, fp, indent=6)
 
+
+def save_prov_recipe():
+    raw_data = 'project-files/temp/temp_raw.csv'
+    recipe = 'dish-oh/temp-oh.json'
+    project_id = 1729702572071
+    # for row in res:
+    #     print(row) 
+    prov_emb_recipe = prov_enable_recipe(project_id, recipe, col_name='value')
+    with open('prov_save_recipe/temp_prov_embed.json', 'wt') as fp:
+        json.dump(prov_emb_recipe, fp, indent=6)
+
+def main():
+    save_prov_recipe()
 
 if __name__ == '__main__':
     main()

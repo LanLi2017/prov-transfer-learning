@@ -562,7 +562,7 @@ class RefineProject:
         response = self.export()
         # return csv.reader(self.export(**kwargs), dialect='excel-tab')
         # raw_content = response.content.decode('utf-8')
-        return csv.reader(StringIO(response.text, newline=''), dialect='excel-tab')
+        return csv.DictReader(StringIO(response.text, newline=''), dialect='excel-tab')
 
     def delete(self):
         response_json = self.do_json('delete-project', include_engine=False)
