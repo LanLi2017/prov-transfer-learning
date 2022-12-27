@@ -1,0 +1,10 @@
+date and time = 27/12/2022 02:10:02 
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/team3_metadata.csv 
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/team3_prepared.json 
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 29528 
+After merging, the number of edits is 24473 
+Step 4: Enable Provenance with Mass-edits >>> 
+ Start OpenRefine with Project id >>> 2548411792946 
+Save Recipe Embeded with Provenance to >>> prov_save_recipe/team3_prov.json 

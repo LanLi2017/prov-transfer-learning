@@ -1,8 +1,11 @@
+from itertools import permutations
 import json
 from pathlib import Path
 from pprint import pprint
 import pandas as pd
 from OR_Client_Library.google_refine.refine import refine
+import os
+from datetime import datetime
 # recipes without merging: dish-oh/*.json
 # recipe with merging: prepared_recipe/*.json
 
@@ -32,7 +35,7 @@ def op_summarize(json_file):
     return json_list, op_list, col_list, steps_list
 
 
-def save_metadata(json_files):
+def save_metadata(json_files, fname='metadata.csv'):
     # json_f = 'dish-oh/team3-OpenRefineHistory_Dish.json'
     df = pd.DataFrame(columns=['JSON File Name', 'Operation Name', 'Column Name', 'Step ID']) 
     jsonf_n_col = []
@@ -51,8 +54,8 @@ def save_metadata(json_files):
     df['Column Name'] = col_n_col
     df['Step ID'] = steps_col
     df.index.name = 'Index'
-    # df.to_csv('workflow-analysis/metadata.csv')
-    df.to_csv('workflow-analysis/temp_metadata.csv')
+    df.to_csv(fname)
+    # df.to_csv('workflow-analysis/temp_metadata.csv')
     # print(df)
     return df
 
@@ -140,18 +143,21 @@ def mass_edit_net(df, col_name='name'):
 def dedup_mass_edits(mass_edits_dicts):
     # if cur_from_nodes is the superclass of prev_from_nodes
     # then deduplicate mass edits by drop prev_from_nodes 
-    seen_from_nodes = []
-    for edits_value in mass_edits_dicts['edits']:
-        from_v = edits_value['from']
-        for seen_values in seen_from_nodes:
-            diff = list(set(from_v) & set(seen_values))
-            print(f'from_v is {from_v}; seen_values is {seen_values}; overlap is {diff}')
-            if not diff:
-                pass
-            else:
-                overlap_index = seen_from_nodes.index(diff)
-                del mass_edits_dicts['edits'][overlap_index]
-        seen_from_nodes.append(from_v)
+    from_values_dict_mapping = {}
+    for index,d in enumerate(mass_edits_dicts['edits']):
+        from_values = frozenset(d['from'])
+        from_values_dict_mapping[from_values] = index
+
+    to_be_deleted = set()
+    for values1, values2 in permutations(from_values_dict_mapping.keys(), 2):
+        if values1 <= values2:
+            idx = from_values_dict_mapping[values1]
+            to_be_deleted.add(idx)
+    mass_edits_dicts['edits'] = [
+        mass_edits
+        for i,mass_edits in enumerate(mass_edits_dicts['edits'])
+        if i not in to_be_deleted
+    ]
     return mass_edits_dicts
     
 
@@ -331,7 +337,47 @@ def save_prov_recipe():
         json.dump(prov_emb_recipe, fp, indent=6)
 
 def main():
-    save_prov_recipe()
+    # datetime object containing current date and time
+    now = datetime.now()
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    logging_fname = os.path.join('logging', f'transfer_prov.txt')
+    with open(logging_fname, 'w') as logging_f:
+        logging_f.write(f"date and time = {dt_string} \n")
+        json_files = ['dish-oh/team3-OpenRefineHistory_Dish.json']
+        metadata_fn = os.path.join('workflow-analysis','team3_metadata.csv')
+        logging_f.write(f'Step 1: Load Recipe and Save its Metadata to >>> {metadata_fn} \n')
+        if not os.path.exists(metadata_fn):
+            df = save_metadata(json_files, metadata_fn)
+        else: 
+            df = pd.read_csv(metadata_fn, index_col=None)
+        logging_f.write('Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits \n')
+        merged_fn = os.path.join('prepared_recipe', 'team3_prepared.json')
+        logging_f.write(f'Save Merged Recipe to >>> {merged_fn} \n')
+        recipe_merged = mass_edit_net(df)
+        if not os.path.exists(merged_fn):
+            with open(merged_fn, 'wt') as fp:
+                json.dump(recipe_merged, fp, indent=6)
+        logging_f.write('Step 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
+        old_no_edits = 0
+        with open('dish-oh/team3-OpenRefineHistory_Dish.json', 'rb')as json_f:
+            original_recipe = json.load(json_f) 
+        for dicts in original_recipe:
+            if dicts['op']=='core/mass-edit':
+                print(f'The number of edits is {len(dicts["edits"])}')
+                old_no_edits += len(dicts['edits'])
+        logging_f.write(f'Before merging,the total number of edits is {old_no_edits} \n')
+        logging_f.write(f'After merging, the number of edits is {len(recipe_merged[0]["edits"])} \n')
+        logging_f.write('Step 4: Enable Provenance with Mass-edits >>> \n ') 
+        prov_fn = os.path.join('prov_save_recipe', 'team3_prov.json')
+        project_id = 2548411792946
+        logging_f.write(f'Start OpenRefine with Project id >>> {project_id} \n')
+        logging_f.write(f'Save Recipe Embeded with Provenance to >>> {prov_fn} \n')
+        if not os.path.exists(prov_fn):
+            prov_emb_recipe = prov_enable_recipe(project_id, json_files[0])
+            with open(prov_fn, 'wt') as fp:
+                json.dump(prov_emb_recipe, fp, indent=6)
+
 
 if __name__ == '__main__':
     main()
