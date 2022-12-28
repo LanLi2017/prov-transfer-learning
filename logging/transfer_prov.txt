@@ -1,10 +1,24 @@
-date and time = 27/12/2022 02:10:02 
+date and time = 27/12/2022 11:28:31 
+
 Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/team3_metadata.csv 
+
 Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
 Save Merged Recipe to >>> prepared_recipe/team3_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Previous edits: 
+from: ['Eggs, Fried (2)', 'Eggs Fried (2)', 'Fried Eggs (2)', '(2) Eggs Fried', '(2) Fried Eggs', 'Eggs (2) Fried', 'Eggs (2), Fried', 'Eggs - Fried (2)', 'Eggs, (2) Fried', 'Eggs, 2 Fried', 'Eggs, Fried 2', 'Eggs, Fried [2]', 'Eggs: Fried (2)', 'Fried (2 Eggs)', 'Fried 2 [eggs]', 'Fried Eggs (2 Eggs)', 'Fried Eggs 2', 'Fried Eggs, (2)', 'Fried Eggs, 2', '[2] Fried Eggs'] >>> 
+ to: ['Fried Eggs, Two'] 
+Current edits that use previous outputs: 
+Current from: ['Fried Eggs, Two', 'Two Fried Eggs', 'Eggs, Fried, Two', 'Two Eggs Fried', 'Two Eggs, Fried', 'Eggs Fried, Two', 'Eggs, Fried (two)', 'Fried Eggs (two)', 'Fried, Two Eggs', 'Eggs Fried (two)', 'Eggs, Fried Two', 'Eggs, Two Fried', 'Eggs, Two, Fried', 'Eggs- Fried Two', 'Eggs: Fried, Two', 'Eggs: Two, Fried', 'Fried Eggs Two', 'Fried Two Eggs', 'Fried [eggs], Two', 'Two Eggs: Fried'] >>> 
+ to: Fried Eggs, Two 
+Merge step 2: Remove sub-edits that is contained by super-edits in the list 
+Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} 
+The number of edits that require to be merged: 1
 Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
 Before merging,the total number of edits is 29528 
-After merging, the number of edits is 24473 
+After merging, the number of edits is 29527 
 Step 4: Enable Provenance with Mass-edits >>> 
  Start OpenRefine with Project id >>> 2548411792946 
 Save Recipe Embeded with Provenance to >>> prov_save_recipe/team3_prov.json 

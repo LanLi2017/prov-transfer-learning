@@ -73,7 +73,9 @@ def merge_edits(mass_edits_ops):
     return res
 
 
-def mass_edit_net(df, col_name='name'):
+def mass_edit_net(df, logging_f, col_name='name'):
+    logging_f.write('Merge step 1: output of previous edits overlap with input of current edits \n')
+    logging_f.write('Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} \n')
     rslt_df = df.loc[(df['Operation Name']=='core/mass-edit') & (df['Column Name']==col_name)]  
     gb = rslt_df.groupby('JSON File Name')['Step ID'].apply(list)
     df_groups = dict(gb) # json_file_name: [step ids of mass-edit]
@@ -81,6 +83,7 @@ def mass_edit_net(df, col_name='name'):
     jsonf_paths = list(df_groups.keys())
     # stepids_list = [list(v) for v in df_groups.values()]
     mass_edits_integrate = [] # output edits: [{"from":[], "to":[]},{...}...] as the knowledge base
+    no_of_changes_list = [] # output list of number of changes 
     for k,v in df_groups.items():
         seen_from_values = []
         seen_to_values = []
@@ -93,8 +96,11 @@ def mass_edit_net(df, col_name='name'):
         for step_id in steps_list:
             mass_edits_op = json_data[step_id]
             facets = json_data[step_id]['engineConfig']['facets']
-            if not facets:
-                mass_edits_steps.append(mass_edits_op)
+            #Include conditions/facets for mass-edits that are not working globally
+            if facets:
+                for per_edit in mass_edits_op['edits']:
+                    per_edit.update({"facets": facets})
+            mass_edits_steps.append(mass_edits_op)
         merge_mass_edits = merge_edits(mass_edits_steps)[0]
         mass_edits_dicts = merge_mass_edits['edits']
         # ensure all the value replacement are working on "All"
@@ -108,9 +114,13 @@ def mass_edit_net(df, col_name='name'):
                 # net effect: a->b->c...->n => a,b,c,...->n
                 # [append the internal products with the final versions]
                 # provenance tracking weakness: how to distinguish old values and new values
+                logging_f.write('\nPrevious edits: \n')
                 overlap_node_v = overlap_node[0]
                 idx = seen_to_values.index(overlap_node_v)
                 # mass_edits_sub[idx]['to'] = to_node
+                logging_f.write(f'from: {seen_from_values[idx]} >>> \n to: {overlap_node} \n')
+                logging_f.write(f'Current edits that use previous outputs: \n')
+                logging_f.write(f'Current from: {from_nodes} >>> \n to: {to_node} \n')
                 from_nodes += seen_from_values[idx]
                 single_edit['from'] = from_nodes
             else:
@@ -118,10 +128,11 @@ def mass_edit_net(df, col_name='name'):
             seen_to_values.append(to_node)
             mass_edits_dicts[i] = single_edit
         merge_mass_edits['edits'] = mass_edits_dicts
-        mass_edits_dedup = dedup_mass_edits(merge_mass_edits)
+        mass_edits_dedup, no_of_changes = dedup_mass_edits(merge_mass_edits, logging_f)
         mass_edits_integrate.append(mass_edits_dedup)
+        no_of_changes_list.append(no_of_changes)
     
-    return mass_edits_integrate    
+    return mass_edits_integrate, no_of_changes_list  
 
 
 # def dedup_mass_edits(mass_edits_dicts):
@@ -140,9 +151,11 @@ def mass_edit_net(df, col_name='name'):
 #     return merge_data
 
 
-def dedup_mass_edits(mass_edits_dicts):
+def dedup_mass_edits(mass_edits_dicts, logging_f):
     # if cur_from_nodes is the superclass of prev_from_nodes
-    # then deduplicate mass edits by drop prev_from_nodes 
+    # then deduplicate mass edits by drop prev_from_nodes
+    logging_f.write(f'Merge step 2: Remove sub-edits that is contained by super-edits in the list \n')
+    logging_f.write('Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} \n') 
     from_values_dict_mapping = {}
     for index,d in enumerate(mass_edits_dicts['edits']):
         from_values = frozenset(d['from'])
@@ -153,12 +166,13 @@ def dedup_mass_edits(mass_edits_dicts):
         if values1 <= values2:
             idx = from_values_dict_mapping[values1]
             to_be_deleted.add(idx)
+    logging_f.write(f'The number of edits that require to be merged: {len(to_be_deleted)}')
     mass_edits_dicts['edits'] = [
         mass_edits
         for i,mass_edits in enumerate(mass_edits_dicts['edits'])
         if i not in to_be_deleted
     ]
-    return mass_edits_dicts
+    return mass_edits_dicts, len(to_be_deleted)
     
 
 
@@ -342,23 +356,24 @@ def main():
     # dd/mm/YY H:M:S
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     logging_fname = os.path.join('logging', f'transfer_prov.txt')
-    with open(logging_fname, 'w') as logging_f:
+    with open(logging_fname, 'a') as logging_f:
         logging_f.write(f"date and time = {dt_string} \n")
         json_files = ['dish-oh/team3-OpenRefineHistory_Dish.json']
         metadata_fn = os.path.join('workflow-analysis','team3_metadata.csv')
-        logging_f.write(f'Step 1: Load Recipe and Save its Metadata to >>> {metadata_fn} \n')
+        logging_f.write(f'\nStep 1: Load Recipe and Save its Metadata to >>> {metadata_fn} \n')
         if not os.path.exists(metadata_fn):
             df = save_metadata(json_files, metadata_fn)
         else: 
             df = pd.read_csv(metadata_fn, index_col=None)
-        logging_f.write('Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits \n')
+        logging_f.write('\nStep 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits \n')
         merged_fn = os.path.join('prepared_recipe', 'team3_prepared.json')
         logging_f.write(f'Save Merged Recipe to >>> {merged_fn} \n')
-        recipe_merged = mass_edit_net(df)
+        recipe_merged, no_of_changes_diff_list = mass_edit_net(df, logging_f)
+        print(f'Number of changes: {no_of_changes_diff_list[0]} \n')
         if not os.path.exists(merged_fn):
             with open(merged_fn, 'wt') as fp:
                 json.dump(recipe_merged, fp, indent=6)
-        logging_f.write('Step 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
+        logging_f.write('\nStep 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
         old_no_edits = 0
         with open('dish-oh/team3-OpenRefineHistory_Dish.json', 'rb')as json_f:
             original_recipe = json.load(json_f) 
@@ -367,7 +382,11 @@ def main():
                 print(f'The number of edits is {len(dicts["edits"])}')
                 old_no_edits += len(dicts['edits'])
         logging_f.write(f'Before merging,the total number of edits is {old_no_edits} \n')
-        logging_f.write(f'After merging, the number of edits is {len(recipe_merged[0]["edits"])} \n')
+        #todo: here we only have one single recipe, so only select the first element from the list
+        no_of_changes_merge = len(recipe_merged[0]['edits'])
+        logging_f.write(f'After merging, the number of edits is {no_of_changes_merge} \n')
+        print(no_of_changes_diff_list)
+        assert no_of_changes_diff_list[0] == old_no_edits - no_of_changes_merge
         logging_f.write('Step 4: Enable Provenance with Mass-edits >>> \n ') 
         prov_fn = os.path.join('prov_save_recipe', 'team3_prov.json')
         project_id = 2548411792946
