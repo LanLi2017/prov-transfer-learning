@@ -1,0 +1,62 @@
+[
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "b"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "a"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "a"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "c"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "c"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "f"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  }
+]

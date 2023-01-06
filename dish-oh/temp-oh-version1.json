@@ -1,0 +1,115 @@
+[ {
+  "op": "core/text-transform",
+  "engineConfig": {
+    "facets": [],
+    "mode": "row-based"
+  },
+  "columnName": "value",
+  "expression": "value.toLowercase()",
+  "onError": "keep-original",
+  "repeat": false,
+  "repeatCount": 10,
+  "description": "Text transform on cells in column value using expression value.toLowercase()"
+},
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "a"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "b"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "c"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "b"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "b"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "f"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "g",
+          "e"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "e"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "value",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "h"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "e"
+      }
+    ],
+    "description": "Mass edit cells in column value"
+  }
+]

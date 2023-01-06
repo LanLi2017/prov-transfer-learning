@@ -22,3 +22,148 @@ After merging, the number of edits is 29527
 Step 4: Enable Provenance with Mass-edits >>> 
  Start OpenRefine with Project id >>> 2548411792946 
 Save Recipe Embeded with Provenance to >>> prov_save_recipe/team3_prov.json 
+date and time = 05/01/2023 17:40:00 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+date and time = 05/01/2023 17:44:27 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:45:06 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:46:13 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:47:39 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:50:01 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:51:13 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:52:27 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:53:42 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Previous edits: 
+from: ['c', 'a'] >>> 
+ to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> 
+ to: f 
+Merge step 2: Remove sub-edits that is contained by super-edits in the list 
+Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} 
+The number of edits that require to be merged: 1
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 17:54:32 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Previous edits: 
+from: ['c', 'a'] >>> 
+ to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> 
+ to: f 
+Merge step 2: Remove sub-edits that is contained by super-edits in the list 
+Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} 
+The number of edits that require to be merged: 1
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 05/01/2023 18:07:10 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+
+Previous edits: 
+from: ['a', 'c'] >>> 
+ to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> 
+ to: f 
+Merge step 2: Remove sub-edits that is contained by super-edits in the list 
+Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} 
+The number of edits that require to be merged: 1
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
