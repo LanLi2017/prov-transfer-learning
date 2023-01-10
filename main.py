@@ -1,3 +1,4 @@
+import copy
 from itertools import permutations
 import json
 from pathlib import Path
@@ -60,21 +61,22 @@ def save_metadata(json_files, fname='metadata.csv'):
     return df
 
 
-def merge_edits(mass_edits_ops):
-    # for better edits preparation: ignore operations in-between
-    # return a single mass-edit operation with cascading edits 
+def Deduplication(mass_edits_ops, logging_f):
+    # De-duplication: Edits share the same target value of "to"
+    # Merge keys 
     res = [mass_edits_ops[0]]
     collapse_edits_list = []
     for op in mass_edits_ops:
         edits = op['edits']
-        # merge keys if value is the same 
-        collapse_edits_list += edits 
-    # merge keys if value is the same 
-    from_v_list = []
+        collapse_edits_list += edits  
     to_from_mapping = {}
     merge_edits_list = []
-    to_be_deleted_idx = []
     for per_edits in collapse_edits_list:
+        item_to = per_edits['to']
+        if item_to in to_from_mapping:
+            logging_f.write(f'Deduplication process >>>>>>>\n')
+            logging_f.write(f'{to_from_mapping[item_to]}:{item_to} and {per_edits["from"]}:{item_to} are merged \n')
+        # merge keys if value is the same
         to_from_mapping.setdefault(per_edits['to'], []).extend(per_edits['from'])
     
     merge_edits_list = [
@@ -120,7 +122,7 @@ def mass_edit_net(df, logging_f, col_name='name'):
                 for per_edit in mass_edits_op['edits']:
                     per_edit.update({"facets": facets})
             mass_edits_steps.append(mass_edits_op)
-        merge_mass_edits = merge_edits(mass_edits_steps)[0]
+        merge_mass_edits = Deduplication(mass_edits_steps, logging_f)[0] # composition func1: deduplication 
         print(merge_mass_edits)
         mass_edits_dicts = merge_mass_edits['edits']
         # ensure all the value replacement are working on "All"
@@ -128,19 +130,21 @@ def mass_edit_net(df, logging_f, col_name='name'):
             # deal with value replacement within the single mass-edit operation 
             from_nodes = single_edit['from']
             seen_from_values.append(from_nodes)
+            # composition func2: refinement 
             overlap_node = list(set(from_nodes) & set(seen_to_values))
             to_node = single_edit['to']
             if overlap_node:
                 # net effect: a->b->c...->n => a,b,c,...->n
                 # [append the internal products with the final versions]
                 # provenance tracking weakness: how to distinguish old values and new values
+                logging_f.write('Refinement Process >>>>>>> \n')
                 logging_f.write('\nPrevious edits: \n')
                 overlap_node_v = overlap_node[0]
                 idx = seen_to_values.index(overlap_node_v)
                 # mass_edits_sub[idx]['to'] = to_node
-                logging_f.write(f'from: {seen_from_values[idx]} >>> \n to: {overlap_node} \n')
+                logging_f.write(f'from: {seen_from_values[idx]} >>> to: {overlap_node} \n')
                 logging_f.write(f'Current edits that use previous outputs: \n')
-                logging_f.write(f'Current from: {from_nodes} >>> \n to: {to_node} \n')
+                logging_f.write(f'Current from: {from_nodes} >>> to: {to_node} \n')
                 from_nodes += seen_from_values[idx]
                 single_edit['from'] = from_nodes
             else:
@@ -148,7 +152,7 @@ def mass_edit_net(df, logging_f, col_name='name'):
             seen_to_values.append(to_node)
             mass_edits_dicts[i] = single_edit
         merge_mass_edits['edits'] = mass_edits_dicts
-        mass_edits_dedup, no_of_changes = dedup_mass_edits(merge_mass_edits, logging_f)
+        mass_edits_dedup, no_of_changes = refine_mass_edits(merge_mass_edits, logging_f)
         mass_edits_integrate.append(mass_edits_dedup)
         no_of_changes_list.append(no_of_changes)
     
@@ -171,11 +175,11 @@ def mass_edit_net(df, logging_f, col_name='name'):
 #     return merge_data
 
 
-def dedup_mass_edits(mass_edits_dicts, logging_f):
+def refine_mass_edits(mass_edits_dicts, logging_f):
     # if cur_from_nodes is the superclass of prev_from_nodes
     # then deduplicate mass edits by drop prev_from_nodes
-    logging_f.write(f'Merge step 2: Remove sub-edits that is contained by super-edits in the list \n')
-    logging_f.write('Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} \n') 
+    # logging_f.write(f'Merge step 2: Remove sub-edits that is contained by super-edits in the list \n')
+    # logging_f.write('Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c} \n') 
     from_values_dict_mapping = {}
     for index,d in enumerate(mass_edits_dicts['edits']):
         from_values = frozenset(d['from'])
@@ -184,8 +188,9 @@ def dedup_mass_edits(mass_edits_dicts, logging_f):
     to_be_deleted = set()
     for values1, values2 in permutations(from_values_dict_mapping.keys(), 2):
         if values1 <= values2:
-            idx = from_values_dict_mapping[values1]
-            to_be_deleted.add(idx)
+            idx1 = from_values_dict_mapping[values1]
+            to_be_deleted.add(idx1)
+            logging_f.write(f'{values1} is refined as {values2}\n')
     logging_f.write(f'The number of edits that require to be merged: {len(to_be_deleted)}')
     mass_edits_dicts['edits'] = [
         mass_edits
@@ -194,12 +199,34 @@ def dedup_mass_edits(mass_edits_dicts, logging_f):
     ]
     return mass_edits_dicts, len(to_be_deleted)  
 
-
-def viz_kb():
-    #TODO NEO4j could be better db [draw the knowledge graph]
-
+# >>>>> parallel composition [deduplicate; refinment; overwrite; conflict]
+def cascade_edits():
+    '''append edits from multiple recipes'''
     pass
 
+def try_to_merge(old_edits, new_edit, logging_f):
+    new_input = new_edit['from']
+    from_to_merge = [*new_input, new_edit['to']]
+    for old_edit in old_edits:
+        input_v = old_edit['from']
+        if set(from_to_merge) <= set(input_v):
+            logging_f.write(f'{new_edit} is subsumed under {old_edit} \n ')
+            return (True, old_edit)
+    return (False, new_edit)
+
+
+def overwrite(base_edits, new_edits, logging_f):
+    # E1, E2: E2 is subclass of E1.input => keep superclass E1 only 
+    # @params: [{E1}, {E2}, ...{En}]
+    logging_f.write("Overwrite Process >>>>>>> \n")
+    base_res = [*base_edits]
+    # new_edits_ref = copy.copy(new_edits)
+    for new_edit in new_edits:
+        flag, res = try_to_merge(base_edits, new_edit, logging_f)
+        if not flag:
+            base_res.append(res)
+    return base_res
+    
 
 def oh_map_history(op):
     '''
