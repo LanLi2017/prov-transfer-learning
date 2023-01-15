@@ -184,20 +184,6 @@ def refine_mass_edits(mass_edits_dicts, logging_f):
     return mass_edits_dicts  
 
 
-def cascade_edits(json_fp):
-    '''Every turn in recipe scheduler, return base edits and new edits'''
-    mass_edits_ds = {}
-    base_recipe = json_fp[0]
-    new_recipe = json_fp[1]
-    with open(base_recipe, 'r')as json_ds:
-        mass_edits_ds = json.load(json_ds) 
-        base_edits = mass_edits_ds[0]['edits']
-    with open(new_recipe, 'r')as new_json_ds:
-        new_mass_edits_ds = json.load(new_json_ds)
-        new_edits = new_mass_edits_ds[0]['edits']
-    return base_edits, new_edits
-
-
 def try_to_merge(old_edits, new_edit, logging_f):
     new_input = new_edit['from']
     from_to_merge = [*new_input, new_edit['to']]
