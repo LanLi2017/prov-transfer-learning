@@ -167,3 +167,268 @@ Example: {from:a, to:b}, {from: [a,b], to:c} >>> {from:[a,b], to:c}
 The number of edits that require to be merged: 1
 Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
 Before merging,the total number of edits is 5 
+date and time = 10/01/2023 12:37:13 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+Deduplication process >>>>>>>
+date and time = 10/01/2023 12:42:54 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+Deduplication process >>>>>>>
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> 
+ to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> 
+ to: f 
+date and time = 10/01/2023 12:59:06 
+
+Step 1: Load Recipe and Save its Metadata to >>> workflow-analysis/temp_v1_metadata.csv 
+
+Step 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits 
+Save Merged Recipe to >>> prepared_recipe/temp_v1_prepared.json 
+Merge step 1: output of previous edits overlap with input of current edits 
+Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+Deduplication process >>>>>>>
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'a', 'c'}) is refined as frozenset({'a', 'c', 'b'})
+The number of edits that require to be merged: 1
+Step 3: Compare number of edits From Original Recipe and Merged Recipe: 
+Before merging,the total number of edits is 5 
+date and time = 15/01/2023 15:12:36 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh.json 
+Deduplication process >>>>>>>
+date and time = 15/01/2023 15:21:55 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'c', 'a'}) is refined as frozenset({'a', 'c', 'b'})
+The number of edits that require to be merged: 1Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/dish-oh/temp-oh-version1.json_prepared 
+date and time = 15/01/2023 15:23:29 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'c', 'a'}) is refined as frozenset({'b', 'c', 'a'})
+The number of edits that require to be merged: 1Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp-oh-version1.json_prepared 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['b'] >>> to: ['a'] 
+Current edits that use previous outputs: 
+Current from: ['a'] >>> to: c 
+
+Previous edits: 
+from: ['a', 'b'] >>> to: ['c'] 
+Current edits that use previous outputs: 
+Current from: ['c'] >>> to: f 
+frozenset({'b'}) is refined as frozenset({'b', 'a'})
+frozenset({'b'}) is refined as frozenset({'b', 'c', 'a'})
+frozenset({'b', 'a'}) is refined as frozenset({'b', 'c', 'a'})
+The number of edits that require to be merged: 2Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh.json_prepared 
+
+Step 3: Recipe Merge Scheduler >>>>> 
+
+Step 4: Parallel Composition >>>>> 
+date and time = 15/01/2023 15:26:14 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'c', 'a'}) is refined as frozenset({'c', 'b', 'a'})
+The number of edits that require to be merged: 1Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp-oh-version1_prepared.json 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['b'] >>> to: ['a'] 
+Current edits that use previous outputs: 
+Current from: ['a'] >>> to: c 
+
+Previous edits: 
+from: ['a', 'b'] >>> to: ['c'] 
+Current edits that use previous outputs: 
+Current from: ['c'] >>> to: f 
+frozenset({'b'}) is refined as frozenset({'b', 'a'})
+frozenset({'b'}) is refined as frozenset({'c', 'b', 'a'})
+frozenset({'b', 'a'}) is refined as frozenset({'c', 'b', 'a'})
+The number of edits that require to be merged: 2Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3: Recipe Merge Scheduler >>>>> 
+
+Step 4: Parallel Composition >>>>> 
+date and time = 15/01/2023 15:30:44 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'a', 'c'}) is refined as frozenset({'b', 'a', 'c'})
+The number of edits that require to be merged: 1Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp-oh-version1_prepared.json 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['b'] >>> to: ['a'] 
+Current edits that use previous outputs: 
+Current from: ['a'] >>> to: c 
+
+Previous edits: 
+from: ['a', 'b'] >>> to: ['c'] 
+Current edits that use previous outputs: 
+Current from: ['c'] >>> to: f 
+frozenset({'b'}) is refined as frozenset({'a', 'b'})
+frozenset({'b'}) is refined as frozenset({'a', 'b', 'c'})
+frozenset({'a', 'b'}) is refined as frozenset({'a', 'b', 'c'})
+The number of edits that require to be merged: 2Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3: Recipe Merge Scheduler >>>>> 
+
+Step 4: Parallel Composition >>>>> 
+date and time = 15/01/2023 15:33:10 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'a', 'c'}) is refined as frozenset({'a', 'b', 'c'})
+The number of edits that require to be merged: 1Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp-oh-version1_prepared.json 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['b'] >>> to: ['a'] 
+Current edits that use previous outputs: 
+Current from: ['a'] >>> to: c 
+
+Previous edits: 
+from: ['a', 'b'] >>> to: ['c'] 
+Current edits that use previous outputs: 
+Current from: ['c'] >>> to: f 
+frozenset({'b'}) is refined as frozenset({'a', 'b'})
+frozenset({'b'}) is refined as frozenset({'b', 'a', 'c'})
+frozenset({'a', 'b'}) is refined as frozenset({'b', 'a', 'c'})
+The number of edits that require to be merged: 2Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3: Recipe Merge Scheduler >>>>> 
+
+Step 4: Parallel Composition >>>>> 
+date and time = 15/01/2023 15:33:57 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'c', 'a'}) is refined as frozenset({'c', 'b', 'a'})
+The number of edits that require to be merged: 1Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp-oh-version1_prepared.json 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['b'] >>> to: ['a'] 
+Current edits that use previous outputs: 
+Current from: ['a'] >>> to: c 
+
+Previous edits: 
+from: ['a', 'b'] >>> to: ['c'] 
+Current edits that use previous outputs: 
+Current from: ['c'] >>> to: f 
+frozenset({'b'}) is refined as frozenset({'b', 'a'})
+frozenset({'b'}) is refined as frozenset({'c', 'a', 'b'})
+frozenset({'b', 'a'}) is refined as frozenset({'c', 'a', 'b'})
+The number of edits that require to be merged: 2Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3: Recipe Merge Scheduler >>>>> 
+
+Step 4: Parallel Composition >>>>> 
