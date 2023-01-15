@@ -74,7 +74,6 @@ def Deduplication(mass_edits_ops, logging_f):
     for per_edits in collapse_edits_list:
         item_to = per_edits['to']
         if item_to in to_from_mapping:
-            logging_f.write(f'Deduplication process >>>>>>>\n')
             logging_f.write(f'{to_from_mapping[item_to]}:{item_to} and {per_edits["from"]}:{item_to} are merged \n')
         # merge keys if value is the same
         to_from_mapping.setdefault(per_edits['to'], []).extend(per_edits['from'])
@@ -86,33 +85,28 @@ def Deduplication(mass_edits_ops, logging_f):
 
     }
     for to, from_ in to_from_mapping.items()]
-    print(merge_edits_list)
     
     res[0]['edits'] = merge_edits_list 
     assert len(res) == 1
     return res
 
 
-def mass_edit_net(df, logging_f, col_name='name'):
-    logging_f.write('Merge step 1: output of previous edits overlap with input of current edits \n')
-    logging_f.write('Example: {from: a, to:b}, {from:b, to:c} >>> {from:a, to:b}, {from: [a,b], to:c} \n')
+def mass_edit_seq(df, logging_f, col_name='name'):
+    # Sequential Composition
     rslt_df = df.loc[(df['Operation Name']=='core/mass-edit') & (df['Column Name']==col_name)]  
     gb = rslt_df.groupby('JSON File Name', group_keys=True)['Step ID'].apply(list)
     df_groups = dict(gb) # json_file_name: [step ids of mass-edit]
-    print(f'the df groups are : {df_groups}')
-    # df_groups = gb.groups
-    jsonf_paths = list(df_groups.keys())
-    # stepids_list = [list(v) for v in df_groups.values()]
-    mass_edits_integrate = [] # output edits: [{"from":[], "to":[]},{...}...] as the knowledge base
-    no_of_changes_list = [] # output list of number of changes 
+    # print(f'the df groups are : {df_groups}')
+    mass_edits_prepared = [] # output edits: [{"from":[], "to":[]},{...}...] as the knowledge base
     for k,v in df_groups.items():
         seen_from_values = []
         seen_to_values = []
         json_f = k
         steps_list = v
         # mass_edits_sub = []
+        logging_f.write(f'Load Original Recipe >>>>> {json_f} \n')
         with open(json_f, 'rt')as file:
-            json_data = json.load(file)
+            json_data = json.load(file) 
         mass_edits_steps = []
         for step_id in steps_list:
             mass_edits_op = json_data[step_id]
@@ -122,10 +116,12 @@ def mass_edit_net(df, logging_f, col_name='name'):
                 for per_edit in mass_edits_op['edits']:
                     per_edit.update({"facets": facets})
             mass_edits_steps.append(mass_edits_op)
+        logging_f.write(f'Deduplication process >>>>>>>\n')
         merge_mass_edits = Deduplication(mass_edits_steps, logging_f)[0] # composition func1: deduplication 
-        print(merge_mass_edits)
+        # print(merge_mass_edits)
         mass_edits_dicts = merge_mass_edits['edits']
         # ensure all the value replacement are working on "All"
+        logging_f.write('Refinement Process >>>>>>> \n')
         for i,single_edit in enumerate(mass_edits_dicts):
             # deal with value replacement within the single mass-edit operation 
             from_nodes = single_edit['from']
@@ -137,7 +133,6 @@ def mass_edit_net(df, logging_f, col_name='name'):
                 # net effect: a->b->c...->n => a,b,c,...->n
                 # [append the internal products with the final versions]
                 # provenance tracking weakness: how to distinguish old values and new values
-                logging_f.write('Refinement Process >>>>>>> \n')
                 logging_f.write('\nPrevious edits: \n')
                 overlap_node_v = overlap_node[0]
                 idx = seen_to_values.index(overlap_node_v)
@@ -152,27 +147,16 @@ def mass_edit_net(df, logging_f, col_name='name'):
             seen_to_values.append(to_node)
             mass_edits_dicts[i] = single_edit
         merge_mass_edits['edits'] = mass_edits_dicts
-        mass_edits_dedup, no_of_changes = refine_mass_edits(merge_mass_edits, logging_f)
-        mass_edits_integrate.append(mass_edits_dedup)
-        no_of_changes_list.append(no_of_changes)
+        mass_edits_refine = refine_mass_edits(merge_mass_edits, logging_f)
+        merged_fn = os.path.join('prepared_recipe', f'{json_f.split("/")[-1].split(".")[0]}_prepared.json')
+        logging_f.write(f'Prepare Recipe By Sequantial Composition and Save it To >>> {merged_fn} \n')
+        with open(merged_fn, 'wt') as fp:
+            json.dump(mass_edits_refine, fp, indent=6)
+        mass_edits_prepared.append(merged_fn)
+        # mass_edits_integrate.append(mass_edits_dedup)
+        # no_of_changes_list.append(no_of_changes)
     
-    return mass_edits_integrate, no_of_changes_list  
-
-
-# def dedup_mass_edits(mass_edits_dicts):
-#     res_dicts = {}
-#     for edits_value in mass_edits_dicts['edits']:
-#         from_v = edits_value['from']
-#         to = edits_value['to']
-#         res_dicts.setdefault(to, []).extend(from_v)
-#     merge_data = [
-#         {
-#         'from': from_,
-#         'to': to,
-#     }
-#     for to, from_ in res_dicts.items()
-#     ]
-#     return merge_data
+    return mass_edits_prepared
 
 
 def refine_mass_edits(mass_edits_dicts, logging_f):
@@ -197,12 +181,22 @@ def refine_mass_edits(mass_edits_dicts, logging_f):
         for i,mass_edits in enumerate(mass_edits_dicts['edits'])
         if i not in to_be_deleted
     ]
-    return mass_edits_dicts, len(to_be_deleted)  
+    return mass_edits_dicts  
 
-# >>>>> parallel composition [deduplicate; refinment; overwrite; conflict]
-def cascade_edits():
-    '''append edits from multiple recipes'''
-    pass
+
+def cascade_edits(json_fp):
+    '''Every turn in recipe scheduler, return base edits and new edits'''
+    mass_edits_ds = {}
+    base_recipe = json_fp[0]
+    new_recipe = json_fp[1]
+    with open(base_recipe, 'r')as json_ds:
+        mass_edits_ds = json.load(json_ds) 
+        base_edits = mass_edits_ds[0]['edits']
+    with open(new_recipe, 'r')as new_json_ds:
+        new_mass_edits_ds = json.load(new_json_ds)
+        new_edits = new_mass_edits_ds[0]['edits']
+    return base_edits, new_edits
+
 
 def try_to_merge(old_edits, new_edit, logging_f):
     new_input = new_edit['from']
@@ -226,7 +220,102 @@ def overwrite(base_edits, new_edits, logging_f):
         if not flag:
             base_res.append(res)
     return base_res
+
+
+def css_recipes(json_fp):
+    # return casecading edits: base-graph, new-edits
+    mass_edits_ds = {}
+    base_recipe = json_fp[0]
+    new_recipe = json_fp[1]
+    with open(base_recipe, 'r')as json_ds:
+        mass_edits_ds = json.load(json_ds) 
+    with open(new_recipe, 'r')as new_json_ds:
+        new_mass_edits_ds = json.load(new_json_ds)    
+    return mass_edits_ds, new_mass_edits_ds
+
+
+def rewrite_edits(edits):
+    # split the list of from values [many to one] => [one to one]*n
+    res = {}
+    for edit in edits:
+        for e_from in edit['from']:
+            element = {e_from:edit['to']}
+            res.update(element)
+    return res
+
+
+def formatted_style(graph):
+    # merge the source values if share the same target value: 
+    # [one-to-one]*n => many-to-one
+    cache = {}
+    for k, v in graph.items():
+        cache.setdefault(v, []).append(k)
+    return [
+        {
+            'from': us,
+            'to': v,
+        }
+        for v, us in cache.items()
+    ]
+
     
+def mass_edits_par(result, rev_new_edits):
+    # >>>>> parallel composition 
+    # @params result: base edits that work as base graph 
+    # @params rev_new_edits: update edges from new edits
+    # return: a merged mass-edits dictionary  
+    for from_v, to_v in rev_new_edits.items():
+        if from_v not in result:
+            result[from_v] = to_v
+        elif result[from_v] != from_v:  # u is a 'from'
+            if (to_v not in result) or (result[from_v] != result[to_v]):
+                conflict_edit = [{from_v:to_v}, {from_v: result[from_v]}]
+                choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
+                if choose_idx==0:
+                    result[from_v] = to_v
+                    if to_v not in result:
+                        result[to_v] = to_v
+                    else:
+                        # transitive rule 
+                        result[from_v] = result[result[to_v]] 
+                else:
+                    pass
+        else:  # u is a 'to'
+            # add v(u->v) to base graph 
+            if to_v not in result:
+                    result[to_v] = to_v
+            if result[result[to_v]] == from_v:
+                conflict_edit = [{from_v:to_v}, {to_v: from_v}]
+                choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
+                if choose_idx==0:
+                    del result[to_v]
+                    if to_v not in result:
+                        result[to_v] = to_v
+                    # transitive rule
+                    result = {
+                        # for all kk pointing to u,
+                        # merge to the tree of v.
+                        kk: result[to_v] if vv == from_v else vv
+                        for kk, vv in result.items()
+                    }
+                else:
+                    pass
+            else:
+                result = {
+                    # for all kk pointing to u,
+                    # merge to the tree of v.
+                    kk: result[to_v] if vv == from_v else vv
+                    for kk, vv in result.items()
+                }
+    result = {
+    k: v
+    for k, v in result.items()
+    if k != v
+    }
+
+    final_res = formatted_style(result)
+    return final_res
+
 
 def oh_map_history(op):
     '''
@@ -290,7 +379,7 @@ def prov_enable_recipe(project_id, recipe, col_name='name'):
     or_server = refine.RefineProject(refine.RefineServer(), project_id) # load openrefine project 
     or_server.undo_redo_project(0) # initialize project status 
     response_res = or_server.apply_operations(recipe)
-    print(response_res)
+    # print(response_res)
     oh_list, past_histories, map_result = oh_map_history(or_server)
     for op_idx,op_dict in enumerate(map_result):
         if op_dict['op'] == 'core/mass-edit' and op_dict['columnName']==col_name:
@@ -309,25 +398,8 @@ def prov_enable_recipe(project_id, recipe, col_name='name'):
             edits_op = op_dict['edits']
             assert type(edits_op) is list
             op_dict['edits'] = diff_ds(prev_ds, cur_ds, edits_op)
-    pprint(map_result)
+    # pprint(map_result)
     return map_result
-
-
-def save_merged_recipe():
-    # json_files = ['dish-oh/test-dish.json']
-    json_files = [
-        'dish-oh/temp-oh.json'
-                #   'dish-oh/team3-OpenRefineHistory_Dish.json',
-                #   'dish-oh/team15-OpenRefineHistory_Dish.json',
-                #   'dish-oh/team140-OpenRefineHistory_Dish.json',
-                  #   'dish-oh/team2020-OpenRefineHistory_Dish.json',
-                #   'dish-oh/team2022-OpenRefineHistory_Dish.json'
-    ]
-    df = save_metadata(json_files)
-    # recipe_kb = mass_edit_analysis(df, col_name='value')
-    recipe_kb = mass_edit_net(df, col_name='value', logging_f='logging/')
-    with open('prepared_recipe/temp_prepared.json', 'wt') as fp:
-        json.dump(recipe_kb, fp, indent=6)
 
 
 def save_prov_recipe():
@@ -342,6 +414,9 @@ def save_prov_recipe():
 
 
 def main():
+    json_files = ['dish-oh/temp-oh-version1.json', 'dish-oh/temp_p1-oh.json']
+    metadata_fname = 'temp_metadata.csv'
+    scheduler = [0,1]
     # datetime object containing current date and time
     now = datetime.now()
     # dd/mm/YY H:M:S
@@ -349,49 +424,34 @@ def main():
     logging_fname = os.path.join('logging', f'transfer_prov.txt')
     with open(logging_fname, 'a') as logging_f:
         logging_f.write(f"date and time = {dt_string} \n")
-        # json_files = ['dish-oh/team3-OpenRefineHistory_Dish.json']
-        json_files = ['dish-oh/temp-oh-version1.json']
-        # metadata_fn = os.path.join('workflow-analysis','team3_metadata.csv')
-        metadata_fn = os.path.join('workflow-analysis','temp_v1_metadata.csv')
-        logging_f.write(f'\nStep 1: Load Recipe and Save its Metadata to >>> {metadata_fn} \n')
-        if not os.path.exists(metadata_fn):
-            df = save_metadata(json_files, metadata_fn)
-        else: 
-            df = pd.read_csv(metadata_fn, index_col=None)
-        logging_f.write('\nStep 2: Summarize Mass-edits >>> Apply Net Effect to Merge Edits \n')
-        # merged_fn = os.path.join('prepared_recipe', 'team3_prepared.json')
-        merged_fn = os.path.join('prepared_recipe', 'temp_v1_prepared.json')
-        logging_f.write(f'Save Merged Recipe to >>> {merged_fn} \n')
-        recipe_merged, no_of_changes_diff_list = mass_edit_net(df, logging_f, col_name='value')
-        print(recipe_merged)
-        # print(f'Number of changes: {no_of_changes_diff_list[0]} \n')
-        if not os.path.exists(merged_fn):
-            with open(merged_fn, 'wt') as fp:
-                json.dump(recipe_merged, fp, indent=6)
-        logging_f.write('\nStep 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
-        old_no_edits = 0
-        with open(json_files[0], 'rb')as json_f:
-            original_recipe = json.load(json_f) 
-        for dicts in original_recipe:
-            if dicts['op']=='core/mass-edit':
-                print(f'The number of edits is {len(dicts["edits"])}')
-                old_no_edits += len(dicts['edits'])
-        logging_f.write(f'Before merging,the total number of edits is {old_no_edits} \n')
-        #todo: here we only have one single recipe, so only select the first element from the list
-        # no_of_changes_merge = len(recipe_merged[0]['edits'])
-        # logging_f.write(f'After merging, the number of edits is {no_of_changes_merge} \n')
-        print(no_of_changes_diff_list)
-        # assert no_of_changes_diff_list[0] == old_no_edits - no_of_changes_merge
-        # logging_f.write('Step 4: Enable Provenance with Mass-edits >>> \n ') 
-        # prov_fn = os.path.join('prov_save_recipe', 'team3_prov.json')
-        # project_id = 2548411792946
-        # logging_f.write(f'Start OpenRefine with Project id >>> {project_id} \n')
-        # logging_f.write(f'Save Recipe Embeded with Provenance to >>> {prov_fn} \n')
-        # if not os.path.exists(prov_fn):
-        #     prov_emb_recipe = prov_enable_recipe(project_id, json_files[0])
-        #     with open(prov_fn, 'wt') as fp:
-        #         json.dump(prov_emb_recipe, fp, indent=6)
-
+        metadata_fn = os.path.join('workflow-analysis',metadata_fname)
+        logging_f.write(f'\nStep 1: Load Recipes and Save Metadata to >>>>> {metadata_fn} \n')
+        # if not os.path.exists(metadata_fn):
+        df = save_metadata(json_files, metadata_fn)
+        # else: 
+        #     df = pd.read_csv(metadata_fn, index_col=None)
+        logging_f.write('\nStep 2: Sequential Composition >>>>> \n')
+        recipes_prepared = mass_edit_seq(df, logging_f, col_name='value')
+        assert len(recipes_prepared) == len(json_files)
+        logging_f.write('\nStep 3: Recipe Merge Scheduler >>>>> \n')
+        logging_f.write('\nStep 4: Parallel Composition >>>>> \n')
+        json_prepared_files = ['prepared_recipe/temp_v1_prepared.json', 'prepared_recipe/temp_v2_prepared.json']
+        base_recipe, new_recipe = css_recipes(json_prepared_files)
+        rev_base_edits = rewrite_edits(base_recipe[0]['edits'])
+        rev_new_edits = rewrite_edits(new_recipe[0]['edits'])
+        base_graph = rev_base_edits.copy()
+        base_graph.update({
+            v: v
+            for v in base_graph.values()
+        })
+        merged_graph = mass_edits_par(base_graph, rev_new_edits)
+        base_recipe[0]['edits'] = merged_graph
+        print(base_recipe)
+        # logging_f.write('\nStep 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
+        # old_no_edits = 0
+        # with open(json_files[0], 'rb')as json_f:
+        #     original_recipe = json.load(json_f) 
+        
 
 if __name__ == '__main__':
     main()
