@@ -432,3 +432,52 @@ The number of edits that require to be merged: 2Prepare Recipe By Sequantial Com
 Step 3: Recipe Merge Scheduler >>>>> 
 
 Step 4: Parallel Composition >>>>> 
+date and time = 15/01/2023 16:03:06 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp-oh-version1.json 
+Deduplication process >>>>>>>
+['a']:b and ['c']:b are merged 
+['g', 'e']:e and ['h']:e are merged 
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['a', 'c'] >>> to: ['b'] 
+Current edits that use previous outputs: 
+Current from: ['b'] >>> to: f 
+frozenset({'c', 'a'}) is refined as frozenset({'c', 'b', 'a'})
+The number of edits that require to be merged: 1 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp-oh-version1_prepared.json 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+
+Previous edits: 
+from: ['b'] >>> to: ['a'] 
+Current edits that use previous outputs: 
+Current from: ['a'] >>> to: c 
+
+Previous edits: 
+from: ['a', 'b'] >>> to: ['c'] 
+Current edits that use previous outputs: 
+Current from: ['c'] >>> to: f 
+frozenset({'b'}) is refined as frozenset({'b', 'a'})
+frozenset({'b'}) is refined as frozenset({'c', 'b', 'a'})
+frozenset({'b', 'a'}) is refined as frozenset({'c', 'b', 'a'})
+The number of edits that require to be merged: 2 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3: Recipe Merge Scheduler >>>>> 
+
+Step 4: Parallel Composition >>>>> 
+Loop Exist: e->a; a->e 
+Choose Edit from new graph: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Add edge based on to-value from new graph: h->h 
+Conflict d->m, d->k 
+Choose d->m 
+Transitive rule is applied: d->m >>> d->t 

@@ -175,7 +175,7 @@ def refine_mass_edits(mass_edits_dicts, logging_f):
             idx1 = from_values_dict_mapping[values1]
             to_be_deleted.add(idx1)
             logging_f.write(f'{values1} is refined as {values2}\n')
-    logging_f.write(f'The number of edits that require to be merged: {len(to_be_deleted)}')
+    logging_f.write(f'The number of edits that require to be merged: {len(to_be_deleted)} \n')
     mass_edits_dicts['edits'] = [
         mass_edits
         for i,mass_edits in enumerate(mass_edits_dicts['edits'])
@@ -245,7 +245,7 @@ def formatted_style(graph):
     ]
 
     
-def mass_edits_par(result, rev_new_edits):
+def mass_edits_par(result, rev_new_edits, logging_f):
     # >>>>> parallel composition 
     # @params result: base edits that work as base graph 
     # @params rev_new_edits: update edges from new edits
@@ -255,29 +255,40 @@ def mass_edits_par(result, rev_new_edits):
             result[from_v] = to_v
         elif result[from_v] != from_v:  # u is a 'from'
             if (to_v not in result) or (result[from_v] != result[to_v]):
+                logging_f.write(f'Conflict {from_v}->{to_v}, {from_v}->{result[from_v]} \n')
                 conflict_edit = [{from_v:to_v}, {from_v: result[from_v]}]
                 choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
                 if choose_idx==0:
+                    logging_f.write(f'Choose {from_v}->{to_v} \n')
                     result[from_v] = to_v
                     if to_v not in result:
                         result[to_v] = to_v
+                        logging_f.write(f'Add one edge {to_v}->{to_v} to base graph \n')
                     else:
                         # transitive rule 
                         result[from_v] = result[result[to_v]] 
+                        logging_f.write(f'Transitive rule is applied: {from_v}->{to_v} >>> {from_v}->{result[result[to_v]]} \n')
                 else:
+                    logging_f.write(f'Choose old {from_v}->{result[from_v]} from the base graph \n')
                     pass
         else:  # u is a 'to'
             # add v(u->v) to base graph 
             if to_v not in result:
-                    result[to_v] = to_v
+                result[to_v] = to_v
+                logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
             if result[result[to_v]] == from_v:
+                logging_f.write(f'Loop Exist: {from_v}->{to_v}; {to_v}->{from_v} \n')
                 conflict_edit = [{from_v:to_v}, {to_v: from_v}]
                 choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
                 if choose_idx==0:
+                    logging_f.write(f'Choose Edit from new graph: {from_v}->{to_v} \n')
                     del result[to_v]
+                    logging_f.write(f'Delete Loop Edit from base graph: {to_v}->{from_v} \n')
                     if to_v not in result:
+                        logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
                         result[to_v] = to_v
                     # transitive rule
+                    logging_f.write('Processing Transitive Rule >>>>>> \n')
                     result = {
                         # for all kk pointing to u,
                         # merge to the tree of v.
@@ -285,6 +296,7 @@ def mass_edits_par(result, rev_new_edits):
                         for kk, vv in result.items()
                     }
                 else:
+                    logging_f.write(f'Keep Edit from base graph: {to_v}->{from_v} \n')
                     pass
             else:
                 result = {
@@ -430,7 +442,7 @@ def main():
             v: v
             for v in base_graph.values()
         })
-        merged_graph = mass_edits_par(base_graph, rev_new_edits)
+        merged_graph = mass_edits_par(base_graph, rev_new_edits, logging_f)
         base_recipe[0]['edits'] = merged_graph
         print(base_recipe)
         # logging_f.write('\nStep 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
