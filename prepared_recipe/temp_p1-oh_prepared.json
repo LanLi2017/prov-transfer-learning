@@ -1,0 +1,20 @@
+{
+      "op": "core/mass-edit",
+      "engineConfig": {
+            "facets": [],
+            "mode": "row-based"
+      },
+      "columnName": "value",
+      "expression": "value",
+      "edits": [
+            {
+                  "from": [
+                        "c",
+                        "a",
+                        "b"
+                  ],
+                  "to": "f"
+            }
+      ],
+      "description": "Mass edit cells in column value"
+}
