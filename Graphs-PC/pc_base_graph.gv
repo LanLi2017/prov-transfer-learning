@@ -1,0 +1,12 @@
+digraph "Base-Graph" {
+	d
+	g
+	k
+	h
+	s
+	t
+	d -> g
+	k -> h
+	s -> t
+	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
+}
