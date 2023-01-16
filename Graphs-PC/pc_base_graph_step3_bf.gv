@@ -1,0 +1,21 @@
+digraph "Base-Graph-step3-bf" {
+	d
+	t
+	k
+	t
+	s
+	t
+	a
+	e
+	h
+	t
+	d -> t
+	k -> t
+	s -> t
+	a -> e
+	h -> t
+	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
+	e -> a
+	e [color=red]
+	a [color=red]
+}

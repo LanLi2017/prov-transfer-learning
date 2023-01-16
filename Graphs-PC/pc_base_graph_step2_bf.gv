@@ -1,15 +1,20 @@
-digraph "Base-Graph" {
+digraph "Base-Graph-step2-bf" {
 	d
-	g
+	h
 	k
 	h
 	s
 	t
 	a
 	e
-	d -> g
+	d -> h
 	k -> h
 	s -> t
 	a -> e
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
+	h -> s
+	h [color=red]
+	d [color=red]
+	k [color=red]
+	s [color=red]
 }

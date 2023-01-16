@@ -1,12 +1,15 @@
-digraph "New-Graph" {
+digraph "Base-Graph-Conflict1" {
 	d
+	h
 	k
 	h
 	s
-	e
+	t
 	a
-	d -> k
-	h -> s
-	e -> a
+	e
+	d -> h
+	k -> h
+	s -> t
+	a -> e
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
 }

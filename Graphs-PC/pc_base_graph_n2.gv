@@ -1,15 +1,18 @@
-digraph "Base-Graph" {
+digraph "Base-Graph-Norm2" {
 	d
-	g
+	t
 	k
-	h
+	t
 	s
 	t
 	a
 	e
-	d -> g
-	k -> h
+	h
+	t
+	d -> t
+	k -> t
 	s -> t
 	a -> e
+	h -> t
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
 }
