@@ -1,10 +1,4 @@
 Index,JSON File Name,Operation Name,Column Name,Step ID
-0,dish-oh/temp-oh-version1.json,core/text-transform,value,0
-1,dish-oh/temp-oh-version1.json,core/mass-edit,value,1
-2,dish-oh/temp-oh-version1.json,core/mass-edit,value,2
-3,dish-oh/temp-oh-version1.json,core/mass-edit,value,3
-4,dish-oh/temp-oh-version1.json,core/mass-edit,value,4
-5,dish-oh/temp-oh-version1.json,core/mass-edit,value,5
-6,dish-oh/temp_p1-oh.json,core/mass-edit,value,0
-7,dish-oh/temp_p1-oh.json,core/mass-edit,value,1
-8,dish-oh/temp_p1-oh.json,core/mass-edit,value,2
+0,dish-oh/temp_p1-oh.json,core/mass-edit,value,0
+1,dish-oh/temp_p1-oh.json,core/mass-edit,value,1
+2,dish-oh/temp_p1-oh.json,core/mass-edit,value,2
