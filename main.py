@@ -3,6 +3,7 @@ from itertools import permutations
 import json
 from pathlib import Path
 from pprint import pprint
+import random
 import pandas as pd
 from OR_Client_Library.google_refine.refine import refine
 import os
@@ -244,33 +245,119 @@ def formatted_style(graph):
         for v, us in cache.items()
     ]
 
-    
-def mass_edits_par(result, rev_new_edits, logging_f):
-    # >>>>> parallel composition 
+# >>>>> recipe composition: [deterministic seq machine, random parallel machine]
+def deter_seq_machine(result, cur_edits,logging_f):
+    print(result)
+    print(cur_edits)
+    """if conclicts occur, later appended edge will overwrite prev version"""
+    # @params result: edit functions from initial recipe that work as base
+    # @params cur_edits: update/overwrite edges from current edits
+    # return: a merged mass-edits dictionary  
+    logging_f.write("Deterministic Sequential Machine Running: >>>>> \n")
+    for from_v, to_v in cur_edits.items():
+        if from_v not in result:
+            result[from_v] = to_v
+        elif result[from_v] != from_v:  # u is a 'from'
+            if (to_v not in result) or (result[from_v] != result[to_v]):
+                print(f'Conflict {from_v}->{to_v}, {from_v}->{result[from_v]} \n')
+                logging_f.write(f'Conflict {from_v}->{to_v}, {from_v}->{result[from_v]} \n')
+                logging_f.write(f'Resolve Conflict by Overwriting with new edge: {from_v}->{to_v} \n')
+                result[from_v] = to_v
+                if to_v not in result:
+                    result[to_v] = to_v
+                    logging_f.write(f'Add one edge {to_v}->{to_v} to base graph \n')
+                else:
+                    # transitive rule 
+                    result[from_v] = result[result[to_v]] 
+                    logging_f.write(f'Transitive rule is applied: {from_v}->{to_v} >>> {from_v}->{result[result[to_v]]} \n')
+        else:  # u is a 'to'
+            # add v(u->v) to base graph 
+            if to_v not in result:
+                result[to_v] = to_v
+                logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
+            if result[result[to_v]] == from_v:
+                print(f'Loop Exist: {from_v}->{to_v}; {to_v}->{from_v} \n')
+                logging_f.write(f'Loop Exist: {from_v}->{to_v}; {to_v}->{from_v} \n')
+                logging_f.write(f'Resolve loop by overwriting with new edge: {from_v}->{to_v} \n')
+
+                del result[to_v]
+                # result.update({from_v: to_v})
+                logging_f.write(f'Delete Loop Edit from base graph: {to_v}->{from_v} \n')
+                if to_v not in result:
+                    logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
+                    result[to_v] = to_v
+                # transitive rule
+                logging_f.write('Processing Transitive Rule >>>>>> \n')
+                result = {
+                    # for all kk pointing to u,
+                    # merge to the tree of v.
+                    kk: to_v if vv == from_v else vv
+                    for kk, vv in result.items()
+                }
+            else:
+                result = {
+                    # for all kk pointing to u,
+                    # merge to the tree of v.
+                    kk: result[to_v] if vv == from_v else vv
+                    for kk, vv in result.items()
+                }
+    result = {
+    k: v
+    for k, v in result.items()
+    if k != v
+    }
+
+    final_res = formatted_style(result)
+    return final_res
+
+
+def parallel_machine(result, rev_new_edits, logging_f, mode='user'):
     # @params result: base edits that work as base graph 
     # @params rev_new_edits: update edges from new edits
+    # @params logging_f: logging file
+    # @params mode: [user, random, ignore]
     # return: a merged mass-edits dictionary  
+    logging_f.write(f'Random Parallel Machine Running: >>>>> Mode->{mode} \n')
     for from_v, to_v in rev_new_edits.items():
         if from_v not in result:
             result[from_v] = to_v
         elif result[from_v] != from_v:  # u is a 'from'
             if (to_v not in result) or (result[from_v] != result[to_v]):
                 logging_f.write(f'Conflict {from_v}->{to_v}, {from_v}->{result[from_v]} \n')
-                conflict_edit = [{from_v:to_v}, {from_v: result[from_v]}]
-                choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
-                if choose_idx==0:
-                    logging_f.write(f'Choose {from_v}->{to_v} \n')
-                    result[from_v] = to_v
-                    if to_v not in result:
-                        result[to_v] = to_v
-                        logging_f.write(f'Add one edge {to_v}->{to_v} to base graph \n')
+                if mode == 'random':
+                    sample_set = (0,1) # 0: old; 1:new
+                    edge_item = random.choice(sample_set)
+                    if edge_item == 0:
+                        logging_f.write(f'Choose old {from_v}->{result[from_v]} from the base graph \n')
+                        pass
                     else:
-                        # transitive rule 
-                        result[from_v] = result[result[to_v]] 
-                        logging_f.write(f'Transitive rule is applied: {from_v}->{to_v} >>> {from_v}->{result[result[to_v]]} \n')
-                else:
-                    logging_f.write(f'Choose old {from_v}->{result[from_v]} from the base graph \n')
+                        logging_f.write(f'Choose new edge: {from_v}->{to_v} \n')
+                        result[from_v] = to_v
+                        if to_v not in result:
+                            result[to_v] = to_v
+                            logging_f.write(f'Add one edge {to_v}->{to_v} to base graph \n')
+                        else:
+                            # transitive rule 
+                            result[from_v] = result[result[to_v]] 
+                            logging_f.write(f'Transitive rule is applied: {from_v}->{to_v} >>> {from_v}->{result[result[to_v]]} \n')
+                elif mode == 'ignore':
                     pass
+                elif mode == 'user':
+                    conflict_edit = [{from_v:to_v}, {from_v: result[from_v]}]
+                    choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
+                    if choose_idx==0:
+                        logging_f.write(f'Choose {from_v}->{to_v} \n')
+                        result[from_v] = to_v
+                        if to_v not in result:
+                            result[to_v] = to_v
+                            logging_f.write(f'Add one edge {to_v}->{to_v} to base graph \n')
+                        else:
+                            # transitive rule 
+                            result[from_v] = result[result[to_v]] 
+                            logging_f.write(f'Transitive rule is applied: {from_v}->{to_v} >>> {from_v}->{result[result[to_v]]} \n')
+                    else:
+                        logging_f.write(f'Choose old {from_v}->{result[from_v]} from the base graph \n')
+                        pass
         else:  # u is a 'to'
             # add v(u->v) to base graph 
             if to_v not in result:
@@ -278,26 +365,49 @@ def mass_edits_par(result, rev_new_edits, logging_f):
                 logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
             if result[result[to_v]] == from_v:
                 logging_f.write(f'Loop Exist: {from_v}->{to_v}; {to_v}->{from_v} \n')
-                conflict_edit = [{from_v:to_v}, {to_v: from_v}]
-                choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
-                if choose_idx==0:
-                    logging_f.write(f'Choose Edit from new graph: {from_v}->{to_v} \n')
-                    del result[to_v]
-                    logging_f.write(f'Delete Loop Edit from base graph: {to_v}->{from_v} \n')
-                    if to_v not in result:
-                        logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
-                        result[to_v] = to_v
-                    # transitive rule
-                    logging_f.write('Processing Transitive Rule >>>>>> \n')
-                    result = {
-                        # for all kk pointing to u,
-                        # merge to the tree of v.
-                        kk: result[to_v] if vv == from_v else vv
-                        for kk, vv in result.items()
-                    }
-                else:
-                    logging_f.write(f'Keep Edit from base graph: {to_v}->{from_v} \n')
+                if mode == 'random':
+                    sample_set = (0,1) # 0: old; 1:new
+                    edge_item = random.choice(sample_set)
+                    if edge_item==0:
+                        logging_f.write(f'Choose Edit from base graph: {to_v}->{from_v} \n')
+                    else:
+                        logging_f.write(f'Choose Edit from new graph: {from_v}->{to_v} \n')
+                        del result[to_v]
+                        logging_f.write(f'Delete Loop Edit from base graph: {to_v}->{from_v} \n')
+                        if to_v not in result:
+                            logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
+                            result[to_v] = to_v
+                        # transitive rule
+                        logging_f.write('Processing Transitive Rule >>>>>> \n')
+                        result = {
+                            # for all kk pointing to u,
+                            # merge to the tree of v.
+                            kk: result[to_v] if vv == from_v else vv
+                            for kk, vv in result.items()
+                        }
+                elif mode == 'ignore':
                     pass
+                elif mode == 'user':
+                    conflict_edit = [{from_v:to_v}, {to_v: from_v}]
+                    choose_idx = int(input(f"Choose index of the edit from the conflict edges (0/1): {conflict_edit}"))
+                    if choose_idx==0:
+                        logging_f.write(f'Choose Edit from new graph: {from_v}->{to_v} \n')
+                        del result[to_v]
+                        logging_f.write(f'Delete Loop Edit from base graph: {to_v}->{from_v} \n')
+                        if to_v not in result:
+                            logging_f.write(f'Add edge based on to-value from new graph: {to_v}->{to_v} \n')
+                            result[to_v] = to_v
+                        # transitive rule
+                        logging_f.write('Processing Transitive Rule >>>>>> \n')
+                        result = {
+                            # for all kk pointing to u,
+                            # merge to the tree of v.
+                            kk: result[to_v] if vv == from_v else vv
+                            for kk, vv in result.items()
+                        }
+                    else:
+                        logging_f.write(f'Keep Edit from base graph: {to_v}->{from_v} \n')
+                        pass
             else:
                 result = {
                     # for all kk pointing to u,
@@ -412,7 +522,12 @@ def save_prov_recipe():
 
 
 def main():
-    json_files = ['dish-oh/temp-oh-version1.json', 'dish-oh/temp_p1-oh.json']
+    # json_files = ['dish-oh/temp-oh-version1.json', 'dish-oh/temp_p1-oh.json']
+    json_files = ['dish-oh/temp_p1-oh.json']
+    json_integrate = ['recipe_integrated/seq.json', 
+                      'recipe_integrated/par_user.json', 
+                      'recipe_integrated/par_random.json', 
+                      'recipe_integrated/par_ignore.json']
     metadata_fname = 'temp_metadata.csv'
     scheduler = [0,1]
     # datetime object containing current date and time
@@ -431,10 +546,14 @@ def main():
         logging_f.write('\nStep 2: Sequential Composition >>>>> \n')
         recipes_prepared = mass_edit_seq(df, logging_f, col_name='value')
         assert len(recipes_prepared) == len(json_files)
-        logging_f.write('\nStep 3: Recipe Merge Scheduler >>>>> \n')
-        logging_f.write('\nStep 4: Parallel Composition >>>>> \n')
+        # logging_f.write('\nStep 3: Recipe Merge Scheduler >>>>> \n')
+        logging_f.write("\nStep 3 Recipe Integration Running: >>>>>> \n")
+        # logging_f.write('\nStep 4: Parallel Composition >>>>> \n')
         json_prepared_files = ['prepared_recipe/temp_v1_prepared.json', 'prepared_recipe/temp_v2_prepared.json']
         base_recipe, new_recipe = css_recipes(json_prepared_files)
+        base_seq = base_recipe.copy()
+        base_par = base_recipe.copy()
+
         rev_base_edits = rewrite_edits(base_recipe[0]['edits'])
         rev_new_edits = rewrite_edits(new_recipe[0]['edits'])
         base_graph = rev_base_edits.copy()
@@ -442,14 +561,27 @@ def main():
             v: v
             for v in base_graph.values()
         })
-        merged_graph = mass_edits_par(base_graph, rev_new_edits, logging_f)
-        base_recipe[0]['edits'] = merged_graph
-        print(base_recipe)
-        # logging_f.write('\nStep 3: Compare number of edits From Original Recipe and Merged Recipe: \n')
-        # old_no_edits = 0
-        # with open(json_files[0], 'rb')as json_f:
-        #     original_recipe = json.load(json_f) 
+        base_seq_g = base_graph.copy()
+        base_par_g = base_graph.copy()
+        # integrate edit functions from recipes
+        # integration method 1: sequential merge
+        recipe_seq_edits = deter_seq_machine(base_seq_g, rev_new_edits, logging_f)
+        base_seq[0]['edits'] = recipe_seq_edits
+        with open(json_integrate[0], 'wt') as fp:
+            logging_f.write(f'Save Integrated Recipe by Determinisic Sequential Machine to >>>>> {json_integrate[0]} \n')
+            json.dump(base_seq, fp, indent=6)
         
-
+        for idx,mode in enumerate(['user', 'random', 'ignore']):
+            base_par_edits = parallel_machine(base_par_g, rev_new_edits, logging_f, mode)
+            base_par[0]['edits'] = base_par_edits
+            with open(json_integrate[idx+1], 'wt') as fp:
+                logging_f.write(f'Save Integrated Recipe by Random Parallel Machine [{mode} Mode] to >>>>> {json_integrate[idx+1]} \n')
+                json.dump(base_par, fp, indent=6) 
+        # with open(json_integrate[2], 'wt') as fp:
+        #     logging_f.write(f'Save Integrated Recipe by Random Parallel Machine [Random mode] to >>>>> {json_integrate[2]} \n')
+        #     json.dump(base_par_r, fp, indent=6) 
+        # with open(json_integrate[3], 'wt') as fp:
+        #     logging_f.write(f'Save Integrated Recipe by Random Parallel Machine [Ignore mode] to >>>>> {json_integrate[3]} \n')
+        #     json.dump(base_par_i, fp, indent=6)
 if __name__ == '__main__':
     main()
