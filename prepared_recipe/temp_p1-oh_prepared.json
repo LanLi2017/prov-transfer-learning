@@ -9,11 +9,21 @@
       "edits": [
             {
                   "from": [
-                        "c",
-                        "a",
                         "b"
                   ],
-                  "to": "f"
+                  "to": "a"
+            },
+            {
+                  "from": [
+                        "e"
+                  ],
+                  "to": "b"
+            },
+            {
+                  "from": [
+                        "f"
+                  ],
+                  "to": "e"
             }
       ],
       "description": "Mass edit cells in column value"

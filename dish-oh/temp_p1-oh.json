@@ -30,11 +30,11 @@
     "edits": [
       {
         "from": [
-          "a"
+          "e"
         ],
         "fromBlank": false,
         "fromError": false,
-        "to": "c"
+        "to": "b"
       }
     ],
     "description": "Mass edit cells in column value"
@@ -50,11 +50,11 @@
     "edits": [
       {
         "from": [
-          "c"
+          "f"
         ],
         "fromBlank": false,
         "fromError": false,
-        "to": "f"
+        "to": "e"
       }
     ],
     "description": "Mass edit cells in column value"
