@@ -1,14 +1,11 @@
 digraph "Base-Graph" {
 	d
 	g
-	k
-	h
 	s
 	t
 	a
 	e
 	d -> g
-	k -> h
 	s -> t
 	a -> e
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]

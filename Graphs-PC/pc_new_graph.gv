@@ -1,12 +1,9 @@
 digraph "New-Graph" {
 	d
 	k
-	h
-	s
 	e
 	a
 	d -> k
-	h -> s
 	e -> a
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
 }

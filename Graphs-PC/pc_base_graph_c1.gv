@@ -1,14 +1,17 @@
 digraph "Base-Graph-Conflict1" {
 	d
-	h
 	k
-	h
 	s
 	t
 	a
 	e
-	d -> h
-	k -> h
+	d -> k
+	s -> t
+	a -> e
+	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
+	s -> t
+	a -> e
+	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
 	s -> t
 	a -> e
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]

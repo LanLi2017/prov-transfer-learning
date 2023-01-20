@@ -1,14 +1,12 @@
-digraph "Base-Graph-step0-bf-merge" {
+digraph "Base-Graph-Conflict1-dsm" {
 	d
-	g
+	k
 	s
 	t
 	a
 	e
-	d -> g
+	d -> k
 	s -> t
 	a -> e
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
-	d -> k
-	d [color=red]
 }

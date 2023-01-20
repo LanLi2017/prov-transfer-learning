@@ -366,6 +366,7 @@ def parallel_machine(result, rev_new_edits, logging_f, mode='user'):
             if result[result[to_v]] == from_v:
                 logging_f.write(f'Loop Exist: {from_v}->{to_v}; {to_v}->{from_v} \n')
                 if mode == 'random':
+                    print(f'mode is {mode}')
                     sample_set = (0,1) # 0: old; 1:new
                     edge_item = random.choice(sample_set)
                     if edge_item==0:
@@ -571,11 +572,13 @@ def main():
             logging_f.write(f'Save Integrated Recipe by Determinisic Sequential Machine to >>>>> {json_integrate[0]} \n')
             json.dump(base_seq, fp, indent=6)
         
-        for idx,mode in enumerate(['user', 'random', 'ignore']):
+        # modes = ['user', 'random', 'ignore']
+        modes = ['user']
+        for idx,mode in enumerate(modes):
             base_par_edits = parallel_machine(base_par_g, rev_new_edits, logging_f, mode)
             base_par[0]['edits'] = base_par_edits
-            with open(json_integrate[idx+1], 'wt') as fp:
-                logging_f.write(f'Save Integrated Recipe by Random Parallel Machine [{mode} Mode] to >>>>> {json_integrate[idx+1]} \n')
+            with open(json_integrate[1], 'wt') as fp:
+                logging_f.write(f'Save Integrated Recipe by Random Parallel Machine [{mode} Mode] to >>>>> {json_integrate[1]} \n')
                 json.dump(base_par, fp, indent=6) 
         # with open(json_integrate[2], 'wt') as fp:
         #     logging_f.write(f'Save Integrated Recipe by Random Parallel Machine [Random mode] to >>>>> {json_integrate[2]} \n')

@@ -1,14 +1,12 @@
-digraph "Base-Graph-step0-bf-merge" {
+digraph loop_user_fix {
 	d
 	g
 	s
 	t
-	a
 	e
+	a
 	d -> g
 	s -> t
-	a -> e
+	e -> a
 	node [fillcolor="#FFFFCC" shape=circle style="rounded,filled"]
-	d -> k
-	d [color=red]
 }

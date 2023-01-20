@@ -1884,3 +1884,303 @@ Processing Transitive Rule >>>>>>
 Save Integrated Recipe by Random Parallel Machine [random Mode] to >>>>> recipe_integrated/par_random.json 
 Random Parallel Machine Running: >>>>> Mode->ignore 
 Save Integrated Recipe by Random Parallel Machine [ignore Mode] to >>>>> recipe_integrated/par_ignore.json 
+date and time = 20/01/2023 07:08:29 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->user 
+Loop Exist: e->a; a->e 
+Choose Edit from new graph: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Choose f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Random Parallel Machine [user Mode] to >>>>> recipe_integrated/par_user.json 
+Random Parallel Machine Running: >>>>> Mode->random 
+Conflict f->h, f->g 
+Choose old f->g from the base graph 
+Save Integrated Recipe by Random Parallel Machine [random Mode] to >>>>> recipe_integrated/par_random.json 
+Random Parallel Machine Running: >>>>> Mode->ignore 
+Conflict f->h, f->g 
+Save Integrated Recipe by Random Parallel Machine [ignore Mode] to >>>>> recipe_integrated/par_ignore.json 
+date and time = 20/01/2023 07:16:10 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->random 
+Loop Exist: e->a; a->e 
+Choose Edit from new graph: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Choose new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Random Parallel Machine [random Mode] to >>>>> recipe_integrated/par_random.json 
+date and time = 20/01/2023 07:17:12 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->ignore 
+Loop Exist: e->a; a->e 
+Conflict f->h, f->g 
+Save Integrated Recipe by Random Parallel Machine [ignore Mode] to >>>>> recipe_integrated/par_ignore.json 
+date and time = 20/01/2023 07:17:37 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->ignore 
+Loop Exist: e->a; a->e 
+Conflict f->h, f->g 
+Save Integrated Recipe by Random Parallel Machine [ignore Mode] to >>>>> recipe_integrated/par_ignore.json 
+date and time = 20/01/2023 07:17:49 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->ignore 
+Loop Exist: e->a; a->e 
+Conflict f->h, f->g 
+Save Integrated Recipe by Random Parallel Machine [ignore Mode] to >>>>> recipe_integrated/par_ignore.json 
+date and time = 20/01/2023 07:18:39 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->random 
+Loop Exist: e->a; a->e 
+Choose Edit from new graph: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Choose old f->g from the base graph 
+Save Integrated Recipe by Random Parallel Machine [random Mode] to >>>>> recipe_integrated/par_random.json 
+date and time = 20/01/2023 07:18:52 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->random 
+Loop Exist: e->a; a->e 
+Choose Edit from base graph: a->e 
+Conflict f->h, f->g 
+Choose old f->g from the base graph 
+Save Integrated Recipe by Random Parallel Machine [random Mode] to >>>>> recipe_integrated/par_random.json 
+date and time = 20/01/2023 07:19:02 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->random 
+Loop Exist: e->a; a->e 
+Choose Edit from base graph: a->e 
+Conflict f->h, f->g 
+Choose new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Random Parallel Machine [random Mode] to >>>>> recipe_integrated/par_random.json 
+date and time = 20/01/2023 07:19:43 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->user 
+Loop Exist: e->a; a->e 
+Choose Edit from new graph: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Choose f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Random Parallel Machine [user Mode] to >>>>> recipe_integrated/par_user.json 
+date and time = 20/01/2023 07:20:05 
+
+Step 1: Load Recipes and Save Metadata to >>>>> workflow-analysis/temp_metadata.csv 
+
+Step 2: Sequential Composition >>>>> 
+Load Original Recipe >>>>> dish-oh/temp_p1-oh.json 
+Deduplication process >>>>>>>
+Refinement Process >>>>>>> 
+The number of edits that require to be merged: 0 
+Prepare Recipe By Sequantial Composition and Save it To >>> prepared_recipe/temp_p1-oh_prepared.json 
+
+Step 3 Recipe Integration Running: >>>>>> 
+Deterministic Sequential Machine Running: >>>>> 
+Loop Exist: e->a; a->e 
+Resolve loop by overwriting with new edge: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Resolve Conflict by Overwriting with new edge: f->h 
+Add one edge h->h to base graph 
+Save Integrated Recipe by Determinisic Sequential Machine to >>>>> recipe_integrated/seq.json 
+Random Parallel Machine Running: >>>>> Mode->user 
+Loop Exist: e->a; a->e 
+Choose Edit from new graph: e->a 
+Delete Loop Edit from base graph: a->e 
+Add edge based on to-value from new graph: a->a 
+Processing Transitive Rule >>>>>> 
+Conflict f->h, f->g 
+Choose old f->g from the base graph 
+Save Integrated Recipe by Random Parallel Machine [user Mode] to >>>>> recipe_integrated/par_user.json 

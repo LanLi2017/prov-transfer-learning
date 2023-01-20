@@ -10,18 +10,14 @@
             "edits": [
                   {
                         "from": [
-                              "f"
+                              "a",
+                              "c"
                         ],
-                        "to": "h"
+                        "to": "e"
                   },
                   {
                         "from": [
-                              "d"
-                        ],
-                        "to": "k"
-                  },
-                  {
-                        "from": [
+                              "f",
                               "m",
                               "g"
                         ],
@@ -29,10 +25,9 @@
                   },
                   {
                         "from": [
-                              "e",
-                              "c"
+                              "d"
                         ],
-                        "to": "a"
+                        "to": "k"
                   }
             ],
             "description": "Mass edit cells in column value"

@@ -5,3 +5,6 @@ project-files/*/*.db
 .DS_Store 
 .DS_Store
 .DS_Store
+utils.py
+recipe_integration.py
+utils.py
