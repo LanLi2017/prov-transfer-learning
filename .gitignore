@@ -7,4 +7,3 @@ project-files/*/*.db
 .DS_Store
 utils.py
 recipe_integration.py
-utils.py
